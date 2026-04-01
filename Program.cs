@@ -33,7 +33,10 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<PasswordService>();
 builder.Services.AddScoped<TwoFactorService>();
+builder.Services.AddScoped<IAuditService, AuditService>();
+builder.Services.AddScoped<IActivityLogger, ActivityLogger>();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

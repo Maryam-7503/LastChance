@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApplication1.Data;
 
@@ -11,9 +12,11 @@ using WebApplication1.Data;
 namespace WebApplication1.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260401202116_AddAdminAndActivityLogs")]
+    partial class AddAdminAndActivityLogs
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -238,7 +241,7 @@ namespace WebApplication1.Migrations
                             Email = "admin@system.com",
                             FailedLoginAttempts = 0,
                             IsActive = true,
-                            PasswordHash = "$2a$11$06u.sv4CzMbAh2nqqFtYCu5rrB/cb3HVQ7du6y.u.QSxyi0zhSGuK",
+                            PasswordHash = "$2a$11$Zi7tUyj4amCIczGG7FIR7.9ef/6ssYa0XE/YxZNMdjMgf1ii6C8fO",
                             RoleId = 1,
                             TwoFactorEnabled = false,
                             Username = "admin"

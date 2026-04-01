@@ -11,6 +11,8 @@ namespace WebApplication1.Data
         public DbSet<Role> Roles { get; set; }
         public DbSet<Token> Tokens { get; set; }
         public DbSet<PasswordHistory> PasswordHistories { get; set; }
+        public DbSet<AdminLog> AdminLogs { get; set; }
+        public DbSet<ActivityLog> ActivityLogs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -46,6 +48,20 @@ namespace WebApplication1.Data
                     CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc)
                 }
             );
+
+            // AdminLog Configuration
+            modelBuilder.Entity<AdminLog>()
+                .HasOne(a => a.Admin)
+                .WithMany()
+                .HasForeignKey(a => a.AdminId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // ActivityLog Configuration
+            modelBuilder.Entity<ActivityLog>()
+                .HasOne(a => a.User)
+                .WithMany()
+                .HasForeignKey(a => a.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
