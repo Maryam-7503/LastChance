@@ -1,0 +1,583 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes"
+    />
+    <title>Logout</title>
+    <!-- Google Fonts & Material Icons -->
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp"
+      rel="stylesheet"
+    />
+    <!-- GOOGLE FONT "POPPINS" -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /*========== VARIABLES (same as dashboard) ==========*/
+      :root {
+        --color-white: #ffffff;
+        --color-light: #f0eff5;
+        --color-gray-light: #86848c;
+        --color-gray-dark: #56555e;
+        --color-dark: #27282f;
+        --color-primary: #24086d;
+        --color-success: rgb(34, 202, 75);
+        --color-danger: rgb(255, 67, 54);
+        --color-warning: rgb(234, 181, 7);
+        --color-purple: rgb(160, 99, 245);
+        --color-background: #f5f6fa; /* light background */
+
+        --color-primary-light: rgba(204, 153, 76, 0.607);
+        --color-success-light: rgba(34, 202, 75, 0.2);
+        --color-danger-light: rgba(255, 67, 54, 0.2);
+        --color-purple-light: rgba(160, 99, 245, 0.2);
+
+        --card-padding: 1.6rem;
+        --padding-1: 1rem;
+        --padding-2: 8px;
+
+        --card-border-radius: 1.6rem;
+        --border-radius-1: 1rem;
+        --border-radius-2: 6px;
+      }
+      /*dark theme variable*/
+      .dark-theme {
+        --color-white: #131315;
+        --color-light: #23232a;
+        --color-dark: #ddd;
+        --color-gray-dark: #adacb5;
+        --color-background: #0b0e14;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        outline: 0;
+        border: 0;
+        appearance: none;
+        text-decoration: none;
+        list-style: none;
+        box-sizing: border-box;
+      }
+      html {
+        font-size: 12px;
+      }
+      body {
+        background: var(--color-light);
+        font-family: poppins, sans-serif;
+        min-height: 100vh;
+        color: var(--color-dark);
+      }
+      img {
+        width: 100%;
+      }
+      h1 {
+        font-size: 2.2rem;
+      }
+      h2 {
+        font-size: 1.5rem;
+      }
+      h3 {
+        font-size: 1.2rem;
+      }
+      h4 {
+        font-size: 1rem;
+      }
+      h5 {
+        font-size: 0.86rem;
+        font-weight: 500;
+      }
+      h6 {
+        font-size: 0.76rem;
+      }
+      p {
+        font-size: 0.86rem;
+        color: var(--color-gray-dark);
+      }
+      small {
+        font-weight: 300;
+        font-size: 0.77rem;
+      }
+      .text-muted {
+        color: var(--color-gray-light);
+      }
+      .primary {
+        color: var(--color-primary);
+      }
+      .danger {
+        color: var(--color-danger);
+      }
+      .success {
+        color: var(--color-success);
+      }
+      .purple {
+        color: var(--color-purple);
+      }
+
+      .bg-primary {
+        background: var(--color-primary);
+        box-shadow: 0 0.8rem 0.8rem var(--color-primary-light);
+      }
+      .bg-danger {
+        background: var(--color-danger);
+        box-shadow: 0 0.8rem 0.8rem var(--color-dangar-light);
+      }
+      .bg-danger {
+        background: var(--color-success);
+        box-shadow: 0 0.8rem 0.8rem var(--color-success-light);
+      }
+      .bg-purple {
+        background: var(--color-purple);
+        box-shadow: 0 0.8rem 0.8rem var(--color-purple-light);
+      }
+      .bg-dark {
+        background: #27282f;
+        box-shadow: 0 0.8rem 0.8rem rgba(0, 0, 0, 0.2);
+      }
+      .bg-purple-light {
+        background: var(--color-purple-light);
+      }
+      .bg-danger-light {
+        background: var(--color-danger-light);
+      }
+      .bg-primary-light {
+        background: var(--color-primary-light);
+      }
+      .bg-success-light {
+        background: var(--color-success-light);
+      }
+      /*========== BASE ==========*/
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+
+      body {
+        background: var(--color-primary);
+        color: var(--color-dark);
+        transition: var(--transition);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+      }
+
+      /* Logout card - matches bills-container style */
+      .logout-wrapper {
+        width: 100%;
+        max-width: 500px;
+        margin: 0 auto;
+      }
+
+      .logout-card {
+        background: var(--color-white);
+        border-radius: 2.5rem;
+        padding: 2rem 2rem 2.5rem;
+        box-shadow: var(--card-shadow);
+        text-align: center;
+        transition: var(--transition);
+        border: 1px solid rgba(36, 8, 109, 0.1);
+      }
+
+      /* Icon circle */
+      .icon-circle {
+        background: var(--color-primary-light);
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        transition: var(--transition);
+      }
+
+      .icon-circle span {
+        font-size: 3.5rem;
+        color: var(--color-primary);
+      }
+
+      h1 {
+        font-size: clamp(1.8rem, 6vw, 2.2rem);
+        font-weight: 700;
+        color: var(--color-dark);
+        margin-bottom: 0.75rem;
+      }
+
+      .logout-message {
+        color: var(--color-gray-light);
+        font-size: 1rem;
+        margin-bottom: 2rem;
+        line-height: 1.5;
+      }
+
+      /* Session info - same style as recent items */
+      .session-info {
+        background: var(--color-primary-light);
+        border-radius: 1.5rem;
+        padding: 1.2rem;
+        margin-bottom: 2rem;
+        text-align: left;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .session-details {
+        flex: 1;
+      }
+
+      .session-details p {
+        font-size: 0.85rem;
+        color: var(--color-gray-light);
+        margin-bottom: 0.25rem;
+      }
+
+      .session-details strong {
+        color: var(--color-dark);
+        font-weight: 600;
+      }
+
+      .session-info span.material-icons-sharp {
+        color: var(--color-primary);
+        font-size: 2rem;
+      }
+
+      /* Button styles - same as .btn from dashboard */
+      .btn {
+        background: var(--color-primary);
+        color: white;
+        border: none;
+        border-radius: 60px;
+        padding: 16px 24px;
+        font-weight: 600;
+        width: 100%;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 1rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+      }
+
+      .btn:hover {
+        background: var(--color-primary-light);
+        transform: translateY(-3px);
+      }
+
+      .btn-outline {
+        background: transparent;
+        border: 2px solid var(--color-primary);
+        color: var(--color-primary);
+        margin-top: 1rem;
+      }
+
+      .btn-outline:hover {
+        background: var(--color-primary-light);
+        color: white;
+        transform: translateY(-3px);
+      }
+
+      .button-group {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin-top: 0.5rem;
+      }
+
+      /* Divider */
+      .divider {
+        border: none;
+        border-top: 1px solid var(--color-primary-light);
+        margin: 1.5rem 0;
+      }
+
+      /* Badge tip */
+      .badge-tip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        background: var(--color-primary-light);
+        padding: 0.4rem 1rem;
+        border-radius: 40px;
+        font-size: 0.75rem;
+        color: var(--color-gray-light);
+        margin-top: 1rem;
+      }
+
+      /* Animation */
+      @keyframes fadeSlideUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .logout-card {
+        animation: fadeSlideUp 0.5s ease-out;
+      }
+
+      /* Responsive */
+      @media (max-width: 576px) {
+        body {
+          padding: 1rem;
+        }
+        .logout-card {
+          padding: 1.5rem;
+        }
+        .icon-circle {
+          width: 70px;
+          height: 70px;
+        }
+        .icon-circle span {
+          font-size: 2.5rem;
+        }
+        .session-info {
+          flex-direction: column;
+          text-align: center;
+        }
+        .session-details {
+          text-align: center;
+        }
+      }
+
+      /* Back link */
+      .back-link {
+        text-decoration: none;
+        color: var(--color-primary);
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        margin-top: 1.2rem;
+        transition: var(--transition);
+      }
+      .back-link:hover {
+        gap: 0.6rem;
+        color: var(--color-primary-dark);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="logout-wrapper">
+      <div class="logout-card">
+        <!-- Icon -->
+        <div class="icon-circle">
+          <span class="material-icons-sharp">logout</span>
+        </div>
+
+        <h1>Sign Out</h1>
+        <div class="logout-message">
+          Are you sure you want to sign out?<br />
+          You'll need to log in again to access your account.
+        </div>
+
+        <!-- Active session info -->
+        <div class="session-info">
+          <span class="material-icons-sharp">account_circle</span>
+          <div class="session-details">
+            <p>Active session</p>
+            <strong id="activeUserName"></strong>
+            <p id="activeUserEmail" style="font-size: 0.7rem; margin-top: 4px"></p>
+          </div>
+        </div>
+
+        <div class="button-group">
+          <!-- Confirm logout button -->
+          <button class="btn" id="confirmLogoutBtn">
+            <span class="material-icons-sharp">logout</span> Yes, sign out
+          </button>
+
+          <!-- Cancel button -->
+          <button class="btn btn-outline" id="cancelLogoutBtn">
+            <span class="material-icons-sharp">arrow_back</span> Stay signed in
+          </button>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="badge-tip">
+          <span class="material-icons-sharp" style="font-size: 1rem">info</span>
+          <span>Any unsaved changes will be lost</span>
+        </div>
+
+        <!-- Return to dashboard link -->
+        <a href="#" id="dashboardReturnLink" class="back-link">
+          <span class="material-icons-sharp">dashboard</span> Back to Dashboard
+        </a>
+      </div>
+    </div>
+
+    <script>
+        (function () {
+            // ================= CURRENT USER DATA =================
+            const currentUser = localStorage.getItem("fullName");
+            const currentEmail = localStorage.getItem("userEmail");
+
+            const userNameElement = document.getElementById("activeUserName");
+            const userEmailElement = document.getElementById("activeUserEmail");
+
+            if (userNameElement) {
+                userNameElement.textContent = currentUser || "Unknown User";
+            }
+
+            if (userEmailElement) {
+                userEmailElement.textContent = currentEmail || "No Email";
+            }
+
+        // ========== Theme Toggle (same as dashboard) ==========
+        const themeWrapper = document.createElement("div");
+        themeWrapper.style.position = "fixed";
+        themeWrapper.style.top = "1rem";
+        themeWrapper.style.right = "1rem";
+        themeWrapper.style.zIndex = "100";
+        themeWrapper.innerHTML = `
+        <div class="theme-btn" style="display: flex; background: var(--color-light); border-radius: 40px; padding: 0.4rem; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+          <span class="material-icons-sharp active" style="font-size:1.4rem; border-radius:40px; padding:0.3rem 0.8rem;">light_mode</span>
+          <span class="material-icons-sharp" style="font-size:1.4rem; border-radius:40px; padding:0.3rem 0.8rem;">dark_mode</span>
+        </div>
+      `;
+        document.body.appendChild(themeWrapper);
+
+        const themeBtn = themeWrapper.querySelector(".theme-btn");
+        if (themeBtn) {
+          const savedTheme = localStorage.getItem("appTheme");
+          if (savedTheme === "dark") {
+            document.body.classList.add("dark-theme");
+            const lightSpan = themeBtn.querySelector("span:first-child");
+            const darkSpan = themeBtn.querySelector("span:last-child");
+            if (lightSpan && darkSpan) {
+              lightSpan.classList.remove("active");
+              darkSpan.classList.add("active");
+            }
+          }
+          themeBtn.addEventListener("click", () => {
+            document.body.classList.toggle("dark-theme");
+            const isDark = document.body.classList.contains("dark-theme");
+            const lightSpan = themeBtn.querySelector("span:first-child");
+            const darkSpan = themeBtn.querySelector("span:last-child");
+            if (lightSpan && darkSpan) {
+              if (isDark) {
+                lightSpan.classList.remove("active");
+                darkSpan.classList.add("active");
+              } else {
+                lightSpan.classList.add("active");
+                darkSpan.classList.remove("active");
+              }
+            }
+            localStorage.setItem("appTheme", isDark ? "dark" : "light");
+          });
+        }
+
+        // ========== Logout Functionality ==========
+        const confirmBtn = document.getElementById("confirmLogoutBtn");
+        const cancelBtn = document.getElementById("cancelLogoutBtn");
+        const returnLink = document.getElementById("dashboardReturnLink");
+
+        // Function to perform logout and update UI
+        async function performLogout() {
+         const token = localStorage.getItem("token");
+  
+  if (token) {
+    try {
+        await fetch("/api/Auth/logout", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
+    } catch (error) {
+      console.log("Logout error:", error);
+    }
+  }
+  
+            localStorage.removeItem("token");
+            localStorage.removeItem("userEmail");
+            localStorage.removeItem("fullName");
+            localStorage.removeItem("loggedIn");
+  
+  window.location.href = "login.html";
+}
+            // Attach events for new buttons
+            const redirectBtn = document.getElementById("redirectToLoginBtn");
+            const homeBtn = document.getElementById("returnHomeDemoBtn");
+
+            if (redirectBtn) {
+              redirectBtn.addEventListener("click", () => {
+                alert("Redirecting to login page. (Demo)");
+                window.location.href = "index.html";
+              });
+            }
+
+            if (homeBtn) {
+              homeBtn.addEventListener("click", () => {
+                window.location.href = "index.html";
+              });
+            }
+          
+
+        // Confirm logout
+        if (confirmBtn) {
+          confirmBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            performLogout();
+          });
+        }
+
+        // Cancel - return to dashboard
+        if (cancelBtn) {
+          cancelBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            window.location.href = "index.html";
+          });
+        }
+
+        // Back link
+        if (returnLink) {
+          returnLink.addEventListener("click", (e) => {
+            e.preventDefault();
+            window.location.href = "index.html";
+          });
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape" && cancelBtn) {
+            cancelBtn.click();
+          }
+          if (e.key === "Enter" && e.target === confirmBtn) {
+            confirmBtn.click();
+          }
+        });
+
+        // Add hover animation styles
+        const style = document.createElement("style");
+        style.textContent = `
+        .btn-outline:hover span, .btn:hover span {
+          transform: translateX(2px);
+        }
+        .btn span, .btn-outline span {
+          transition: transform 0.2s ease;
+        }
+      `;
+        document.head.appendChild(style);
+      })();
+    </script>
+  </body>
+</html>

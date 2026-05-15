@@ -1,0 +1,923 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Transfer Money — Winners Bank</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp"
+          rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet" />
+    <style>
+        :root {
+            --color-white: #ffffff;
+            --color-light: #f0eff5;
+            --color-gray-light: #86848c;
+            --color-gray-dark: #56555e;
+            --color-dark: #27282f;
+            --color-primary: #210a59;
+            --color-primary-light: rgba(204, 153, 76, 0.607);
+            --color-success: #22ca4b;
+            --color-success-light: rgba(34, 202, 75, 0.15);
+            --color-danger: #ff4336;
+            --color-danger-light: rgba(255, 67, 54, 0.15);
+            --color-purple: #451cb5;
+            --color-purple-light: rgba(255, 255, 255, 0.05);
+            --background-color: rgba(199, 148, 53, 0.597);
+            --card-border-radius: 1.6rem;
+            --border-radius-1: 1rem;
+            --border-radius-2: 6px;
+            --card-padding: 1.6rem;
+            --sidebar-width: 220px;
+        }
+
+        .dark-theme {
+            --color-white: #131315;
+            --color-light: #23232a;
+            --color-dark: #ddd;
+            --color-gray-dark: #adacb5;
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            outline: 0;
+            border: 0;
+            appearance: none;
+            text-decoration: none;
+            list-style: none;
+        }
+
+        html {
+            font-size: 13px;
+        }
+
+        body {
+            font-family: "Poppins", sans-serif;
+            background: var(--color-light);
+            color: var(--color-dark);
+            min-height: 100vh;
+        }
+
+        img {
+            width: 100%;
+            display: block;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+        }
+
+        h4 {
+            font-size: 0.95rem;
+        }
+
+        h5 {
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        p {
+            font-size: 0.85rem;
+            color: var(--color-gray-dark);
+        }
+
+        nav {
+            width: 100%;
+            background: var(--color-white);
+            padding: 0.8rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+
+            nav .container {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 96%;
+                margin: 0 auto;
+            }
+
+            nav .logo-area {
+                display: flex;
+                align-items: center;
+                gap: 0.6rem;
+            }
+
+            nav .logo-icon {
+                width: 38px;
+                height: 38px;
+                background: var(--color-primary);
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-size: 1.4rem;
+            }
+
+            nav .logo-text {
+                font-size: 1.1rem;
+                font-weight: 700;
+                color: var(--color-primary);
+            }
+
+                nav .logo-text span {
+                    color: var(--color-primary-light);
+                }
+
+            nav .search-bar {
+                background: var(--color-light);
+                padding: 0.5rem 1rem;
+                width: 30vw;
+                border-radius: var(--border-radius-2);
+                display: flex;
+                align-items: center;
+                gap: 0.8rem;
+                color: var(--color-gray-light);
+            }
+
+                nav .search-bar input {
+                    background: transparent;
+                    width: 100%;
+                    font-family: "Poppins", sans-serif;
+                    font-size: 0.85rem;
+                    color: var(--color-dark);
+                }
+
+            nav .profile-area {
+                display: flex;
+                align-items: center;
+                gap: 1.5rem;
+            }
+
+
+            nav .theme-btn {
+                display: flex;
+                background: var(--color-light);
+                border-radius: var(--border-radius-2);
+                overflow: hidden;
+                cursor: pointer;
+            }
+
+                nav .theme-btn span {
+                    padding: 0.4rem 0.6rem;
+                    font-size: 1.2rem;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: var(--color-gray-light);
+                    transition: all 200ms ease;
+                }
+
+                    nav .theme-btn span.active {
+                        background: var(--color-dark);
+                        color: var(--color-white);
+                        border-radius: var(--border-radius-2);
+                    }
+
+            
+
+            
+           
+
+        #menu-btn {
+            display: none;
+            background: transparent;
+            cursor: pointer;
+            color: var(--color-dark);
+            font-size: 1.5rem;
+        }
+
+        main {
+            display: grid;
+            grid-template-columns: 16rem auto;
+            gap: 2rem;
+            width: 96%;
+            margin: 1rem auto 4rem;
+        }
+
+        aside {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 88vh;
+        }
+
+        #close-btn {
+            display: none;
+        }
+
+        .sidebar {
+            padding: 1rem 0;
+            box-shadow: 0 4px 20px rgba(149,89,20,0.05);
+            overflow: hidden;
+        }
+
+            .sidebar a {
+                display: flex;
+                align-items: center;
+                gap: 0.9rem;
+                height: 3.6rem;
+                padding: 0 1.2rem;
+                color: var(--color-gray-light);
+                position: relative;
+                transition: all 250ms ease;
+            }
+
+                .sidebar a span.material-icons-sharp {
+                    font-size: 1.7rem;
+                    margin-left: 3rem;
+                    transition: all 500ms ease;
+                }
+
+                .sidebar a h4 {
+                    font-size: 0.85rem;
+                    font-weight: 500;
+                    white-space: nowrap;
+                }
+
+                .sidebar a.active {
+                    background: var(--color-white);
+                    color: var(--color-primary);
+                }
+
+                    .sidebar a.active::before {
+                        content: "";
+                        width: 6px;
+                        height: 100%;
+                        position: absolute;
+                        background: var(--color-primary);
+                    }
+
+                .sidebar a:hover {
+                    color: var(--color-primary);
+                }
+
+                    .sidebar a:hover span.material-icons-sharp {
+                        transform: translateX(4px);
+                        margin-left: 0rem;
+                    }
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+            .page-header .icon-box {
+                width: 46px;
+                height: 46px;
+                border-radius: 12px;
+                background: var(--background-color);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--color-primary);
+                font-size: 1.5rem;
+            }
+
+        .card {
+            background: var(--color-white);
+            border-radius: var(--card-border-radius);
+            padding: var(--card-padding);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+
+        .section-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--color-gray-dark);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 1rem;
+        }
+
+        .beneficiaries {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .beneficiary-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+            cursor: pointer;
+            padding: 0.8rem 1rem;
+            border-radius: var(--border-radius-1);
+            transition: 200ms ease;
+        }
+
+            .beneficiary-card:hover {
+                background: var(--color-light);
+            }
+
+            .beneficiary-card .avatar {
+                width: 44px;
+                height: 44px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 0.9rem;
+                font-weight: 600;
+                color: white;
+            }
+
+            .beneficiary-card h5 {
+                font-size: 0.75rem;
+                text-align: center;
+            }
+
+            .beneficiary-card p {
+                font-size: 0.7rem;
+            }
+
+        .balance-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: var(--color-success-light);
+            color: #0d6e2c;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .transfer-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.2rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+            .form-group.full {
+                grid-column: 1 / -1;
+            }
+
+            .form-group label {
+                font-size: 0.8rem;
+                font-weight: 500;
+                color: var(--color-gray-dark);
+            }
+
+        .input-wrap {
+            position: relative;
+        }
+
+            .input-wrap .material-icons-sharp {
+                position: absolute;
+                left: 0.8rem;
+                top: 50%;
+                transform: translateY(-50%);
+                font-size: 1.1rem;
+                color: var(--color-gray-light);
+                pointer-events: none;
+            }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.75rem 0.9rem 0.75rem 2.4rem;
+            border-radius: var(--border-radius-1);
+            border: 1.5px solid #e0dff0;
+            font-family: "Poppins", sans-serif;
+            font-size: 0.85rem;
+            color: var(--color-dark);
+            background: var(--color-light);
+            transition: border-color 200ms ease, box-shadow 200ms ease;
+        }
+
+            .form-group input:focus, .form-group select:focus {
+                border-color: var(--color-primary);
+                box-shadow: 0 0 0 3px var(--color-primary-light);
+                background: var(--color-white);
+            }
+
+        .error-msg {
+            font-size: 0.72rem;
+            color: var(--color-danger);
+            min-height: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .transfer-summary {
+            background: var(--background-color);
+            border-radius: var(--border-radius-1);
+            padding: 1rem 1.2rem;
+        }
+
+            .transfer-summary h4 {
+                font-size: 0.78rem;
+                color: var(--color-primary);
+                margin-bottom: 0.7rem;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.35rem 0;
+            border-bottom: 1px dashed rgba(71,7,234,0.15);
+        }
+
+            .summary-row:last-child {
+                border: none;
+            }
+
+            .summary-row span:first-child {
+                font-size: 0.78rem;
+                color: var(--color-gray-dark);
+            }
+
+            .summary-row span:last-child {
+                font-size: 0.82rem;
+                font-weight: 600;
+                color: var(--color-dark);
+            }
+
+            .summary-row.total span:last-child {
+                color: var(--color-primary);
+                font-size: 1rem;
+            }
+
+        .btn-transfer {
+            width: 100%;
+            padding: 0.9rem;
+            background: var(--color-primary);
+            color: white;
+            font-family: "Poppins", sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: var(--border-radius-1);
+            cursor: pointer;
+            transition: all 300ms ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            box-shadow: 0 4px 16px var(--color-primary-light);
+        }
+
+            .btn-transfer:hover {
+                background: #170346;
+                transform: translateY(-1px);
+            }
+
+            .btn-transfer:disabled {
+                opacity: 0.7;
+                cursor: not-allowed;
+                transform: none;
+            }
+
+        .success-message {
+            display: none;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 1rem 1.2rem;
+            background: var(--color-success-light);
+            border-radius: var(--border-radius-1);
+            border-left: 4px solid var(--color-success);
+        }
+
+            .success-message.show {
+                display: flex;
+            }
+
+            .success-message .material-icons-sharp {
+                color: var(--color-success);
+                font-size: 1.6rem;
+            }
+
+            .success-message .msg-text h5 {
+                color: #0d6e2c;
+                font-size: 0.9rem;
+            }
+
+            .success-message .msg-text p {
+                font-size: 0.78rem;
+                color: #1a8a3e;
+                margin-top: 2px;
+            }
+
+        .alert-danger {
+            display: none;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 1rem 1.2rem;
+            background: var(--color-danger-light);
+            border-radius: var(--border-radius-1);
+            border-left: 4px solid var(--color-danger);
+        }
+
+            .alert-danger.show {
+                display: flex;
+            }
+
+            .alert-danger .material-icons-sharp {
+                color: var(--color-danger);
+                font-size: 1.6rem;
+            }
+
+            .alert-danger p {
+                color: var(--color-danger);
+                font-size: 0.85rem;
+            }
+
+        @media (max-width: 900px) {
+            main {
+                grid-template-columns: 1fr;
+            }
+
+            aside {
+                position: fixed;
+                left: -100%;
+                top: 0;
+                height: 100vh;
+                width: var(--sidebar-width);
+                z-index: 200;
+                background: var(--color-white);
+                transition: left 300ms ease;
+            }
+
+                aside.open {
+                    left: 0;
+                }
+
+            #close-btn {
+                display: flex;
+                margin: 1rem;
+                cursor: pointer;
+                background: none;
+                color: var(--color-dark);
+                font-size: 1.4rem;
+            }
+
+            #menu-btn {
+                display: flex;
+            }
+
+            .transfer-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <div class="logo-area">
+                <div class="logo-icon"><span class="material-icons-sharp">account_balance</span></div>
+                <div class="logo-text">Winners<span>Bank</span></div>
+            </div>
+            <div class="search-bar">
+                <span class="material-icons-sharp">search</span>
+                <input type="search" placeholder="Search transactions, beneficiaries…" />
+            </div>
+            <div class="profile-area">
+                <div class="theme-btn" onclick="toggleTheme()">
+                    <span class="material-icons-sharp active" id="lightIcon">light_mode</span>
+                    <span class="material-icons-sharp" id="darkIcon">dark_mode</span>
+                </div>
+                <div class="profile">
+                    <h3 id="username"></h3>
+
+                </div>
+                <button id="menu-btn" onclick="toggleSidebar()">
+                    <span class="material-icons-sharp">menu</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <aside id="sidebar">
+            <button id="close-btn" onclick="toggleSidebar()">
+                <span class="material-icons-sharp">close</span>
+            </button>
+            <div class="sidebar">
+                <a href="index.html"><span class="material-icons-sharp">dashboard</span><h4>Dashboard</h4></a>
+                <a href="transfer.html" class="active"><span class="material-icons-sharp">send</span><h4>Transfer Money</h4></a>
+                <a href="transfer_his.html"><span class="material-icons-sharp">history</span><h4>Transfer History</h4></a>
+                <a href="Beneficiaries.HTML"><span class="material-icons-sharp">group</span><h4>Beneficiaries</h4></a>
+                <a href="bills.html"><span class="material-icons-sharp">payment</span><h4>Bills Payment</h4></a>
+                <a href="adminmonitor.html"><span class="material-icons-sharp">admin_panel_settings</span><h4>Admin Panel</h4></a>
+                <a href="settings.html"><span class="material-icons-sharp">settings</span><h4>Settings & Security</h4></a>
+                <a href="support.html"><span class="material-icons-sharp">help_center</span><h4>Support</h4></a>
+                <a href="logout.html"><span class="material-icons-sharp">logout</span><h4>Logout</h4></a>
+            </div>
+        </aside>
+
+        <div class="content">
+            <div class="page-header">
+                <div class="icon-box"><span class="material-icons-sharp">send</span></div>
+                <div>
+                    <h2>Transfer Money</h2>
+                    <p>Send funds securely to any account</p>
+                </div>
+            </div>
+
+            <!-- Balance Badge -->
+            <div class="balance-badge">
+                <span class="material-icons-sharp" style="font-size:1rem;">account_balance_wallet</span>
+                Available Balance: <span id="availableBalance">Loading...</span>
+            </div>
+
+            <!-- Quick Beneficiaries -->
+            <div class="card">
+                <div class="section-title">Quick Transfer</div>
+                <div class="beneficiaries" id="beneficiariesList">
+                    <p style="color: var(--color-gray-light); font-size: 0.8rem;">Loading beneficiaries...</p>
+                </div>
+            </div>
+
+            <!-- Form -->
+            <div class="card">
+                <div class="transfer-grid">
+                    <div class="form-group">
+                        <label>From Account</label>
+                        <div class="input-wrap">
+                            <span class="material-icons-sharp">account_balance_wallet</span>
+                            <select id="fromAccount" onchange="updateSummary()">
+                                <option value="">Loading...</option>
+                            </select>
+                        </div>
+                        <div class="error-msg" id="accountError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Transfer Type</label>
+                        <div class="input-wrap">
+                            <span class="material-icons-sharp">swap_horiz</span>
+                            <select id="transferType">
+                                <option>Instant Transfer</option>
+                                <option>Standard Transfer</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>To Account Number</label>
+                        <div class="input-wrap">
+                            <span class="material-icons-sharp">person</span>
+                            <input type="text" id="toAccount" placeholder="Enter account number (e.g. WIN123456)" oninput="updateSummary()" />
+                        </div>
+                        <div class="error-msg" id="toError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Amount (EGP)</label>
+                        <div class="input-wrap">
+                            <span class="material-icons-sharp">attach_money</span>
+                            <input type="number" id="amount" placeholder="0.00" min="1" oninput="updateSummary()" />
+                        </div>
+                        <div class="error-msg" id="amountError"></div>
+                    </div>
+
+                    <div class="form-group full">
+                        <label>Note (Optional)</label>
+                        <div class="input-wrap">
+                            <span class="material-icons-sharp">notes</span>
+                            <input type="text" id="note" placeholder="Add a note…" />
+                        </div>
+                    </div>
+
+                    <!-- Summary -->
+                    <div class="form-group full">
+                        <div class="transfer-summary">
+                            <h4>Transfer Summary</h4>
+                            <div class="summary-row"><span>From</span><span id="sumFrom">—</span></div>
+                            <div class="summary-row"><span>To Account</span><span id="sumTo">—</span></div>
+                            <div class="summary-row"><span>Amount</span><span id="sumAmount">EGP 0.00</span></div>
+                            <div class="summary-row total"><span>Total Deducted</span><span id="sumTotal">EGP 0.00</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Error Alert -->
+                    <div class="form-group full">
+                        <div class="alert-danger" id="errorAlert">
+                            <span class="material-icons-sharp">error_outline</span>
+                            <p id="errorMsg"></p>
+                        </div>
+                    </div>
+
+                    <!-- Button -->
+                    <div class="form-group full">
+                        <button class="btn-transfer" id="transferBtn" onclick="transferMoney()">
+                            <span class="material-icons-sharp">send</span>
+                            Confirm Transfer
+                        </button>
+                    </div>
+
+                    <!-- Success -->
+                    <div class="form-group full">
+                        <div class="success-message" id="successMessage">
+                            <span class="material-icons-sharp">check_circle</span>
+                            <div class="msg-text">
+                                <h5>Transfer Successful!</h5>
+                                <p id="successDetail">Your transfer has been processed successfully.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const token = localStorage.getItem("token");
+        if (!token) window.location.href = "login.html";
+
+        const headers = {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+        };
+
+        let userAccountNumber = "";
+
+        // ── Load Balance ──
+        async function loadBalance() {
+            try {
+                const res = await fetch("/api/Banking/balance", { headers });
+                if (res.status === 401) { localStorage.removeItem("token"); window.location.href = "login.html"; return; }
+                if (!res.ok) return;
+                const data = await res.json();
+                userAccountNumber = data.accountNumber;
+                document.getElementById("availableBalance").textContent = `EGP ${data.balance.toLocaleString()}`;
+
+                const select = document.getElementById("fromAccount");
+                select.innerHTML = `<option value="${data.accountNumber}">${data.accountType} — ${data.accountNumber}</option>`;
+                updateSummary();
+
+                // Update profile
+                const username = localStorage.getItem("username") || "User";
+                document.getElementById("profileName").textContent = username;
+                document.getElementById("profileInitials").textContent = username.substring(0, 2).toUpperCase();
+            } catch (err) {
+                console.error("Balance error:", err);
+            }
+        }
+
+        // ── Load Beneficiaries ──
+        async function loadBeneficiaries() {
+            try {
+                const res = await fetch("/api/Banking/beneficiaries", { headers });
+                if (!res.ok) return;
+                const data = await res.json();
+                const container = document.getElementById("beneficiariesList");
+
+                if (data.length === 0) {
+                    container.innerHTML = `<p style="color: var(--color-gray-light); font-size: 0.8rem;">No beneficiaries yet. Add one from the Beneficiaries page.</p>`;
+                    return;
+                }
+
+                const colors = ["#420795,#1b025b", "#022560,#021649", "#22ca4b,#0d6e2c", "#eab507,#b87a00"];
+                container.innerHTML = data.map((b, i) => {
+                    const initials = b.name.split(" ").map(w => w[0]).join("").substring(0, 2).toUpperCase();
+                    const color = colors[i % colors.length];
+                    return `
+                      <div class="beneficiary-card" onclick="selectBeneficiary('${b.accountNumber}')">
+                        <div class="avatar" style="background: linear-gradient(135deg, ${color})">${initials}</div>
+                        <h5>${b.name}</h5>
+                        <p>****${b.accountNumber.slice(-4)}</p>
+                      </div>
+                    `;
+                }).join("");
+            } catch (err) {
+                console.error("Beneficiaries error:", err);
+            }
+        }
+
+        function selectBeneficiary(acc) {
+            document.getElementById("toAccount").value = acc;
+            updateSummary();
+        }
+
+        function updateSummary() {
+            const from = document.getElementById("fromAccount").value;
+            const to = document.getElementById("toAccount").value;
+            const amount = parseFloat(document.getElementById("amount").value) || 0;
+
+            document.getElementById("sumFrom").textContent = from || "—";
+            document.getElementById("sumTo").textContent = to || "—";
+            document.getElementById("sumAmount").textContent = `EGP ${amount.toFixed(2)}`;
+            document.getElementById("sumTotal").textContent = `EGP ${amount.toFixed(2)}`;
+        }
+
+        // ── Transfer ──
+        async function transferMoney() {
+            const toAccount = document.getElementById("toAccount").value.trim();
+            const amount = parseFloat(document.getElementById("amount").value);
+            const note = document.getElementById("note").value.trim();
+
+            // Clear previous messages
+            document.getElementById("errorAlert").classList.remove("show");
+            document.getElementById("successMessage").classList.remove("show");
+            ["toError", "amountError"].forEach(id => document.getElementById(id).innerHTML = "");
+
+            let valid = true;
+            if (!toAccount || toAccount.length < 3) {
+                document.getElementById("toError").innerHTML = '<span class="material-icons-sharp">error_outline</span> Enter a valid account number';
+                valid = false;
+            }
+            if (!amount || amount <= 0) {
+                document.getElementById("amountError").innerHTML = '<span class="material-icons-sharp">error_outline</span> Enter a valid amount';
+                valid = false;
+            }
+            if (!valid) return;
+
+            const btn = document.getElementById("transferBtn");
+            btn.disabled = true;
+            btn.innerHTML = '<span class="material-icons-sharp">hourglass_top</span> Processing...';
+
+            try {
+                const res = await fetch("/api/Banking/transfer", {
+                    method: "POST",
+                    headers,
+                    body: JSON.stringify({
+                        toAccountNumber: toAccount,
+                        amount: amount,
+                        description: note || "Bank Transfer"
+                    })
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    document.getElementById("successDetail").textContent = `EGP ${amount.toFixed(2)} sent to ${toAccount} successfully.`;
+                    document.getElementById("successMessage").classList.add("show");
+                    document.getElementById("successMessage").scrollIntoView({ behavior: "smooth", block: "nearest" });
+
+                    // Reset form
+                    document.getElementById("toAccount").value = "";
+                    document.getElementById("amount").value = "";
+                    document.getElementById("note").value = "";
+                    updateSummary();
+
+                    // Refresh balance
+                    loadBalance();
+                } else {
+                    document.getElementById("errorMsg").textContent = data.message || "Transfer failed.";
+                    document.getElementById("errorAlert").classList.add("show");
+                }
+            } catch (err) {
+                document.getElementById("errorMsg").textContent = "Network error. Please try again.";
+                document.getElementById("errorAlert").classList.add("show");
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<span class="material-icons-sharp">send</span> Confirm Transfer';
+            }
+        }
+
+        function toggleSidebar() {
+            document.getElementById("sidebar").classList.toggle("open");
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle("dark-theme");
+            const light = !document.body.classList.contains("dark-theme");
+            document.getElementById("lightIcon").classList.toggle("active", light);
+            document.getElementById("darkIcon").classList.toggle("active", !light);
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            loadBalance();
+            loadBeneficiaries();
+        });
+    </script>
+    <script>
+        const username = localStorage.getItem("fullName");
+
+        if (username) {
+            document.getElementById("username").innerText = username;
+        }
+    </script>
+</body>
+</html>

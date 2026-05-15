@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Trust Bank</title>
+<link rel="stylesheet" href="style22.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="container" id="container">
+
+    <!-- FORM SIDE -->
+    <div class="form-container">
+
+        <!-- LOGIN FORM بعد التعديلات -->
+<form id="loginForm" class="form login-form">
+
+    <!-- Logo -->
+    
+
+    <h2>SIGN IN</h2>
+
+    <!-- Email -->
+    <div class="input-box">
+        <i class="fa fa-envelope"></i>
+        <input type="email" id="loginEmail" placeholder="Email Address" required>
+    </div>
+
+    <!-- Password -->
+    <div class="input-box password-box">
+        <i class="fa fa-lock"></i>
+        <input type="password" id="loginPass" placeholder="Password" required>
+        
+    </div>
+
+    <!-- Options -->
+    <div class="options">
+        <label>
+            <input type="checkbox"> Remember this device
+        </label>
+        <a href="forgot.html">Forgot Password?</a>
+    </div>
+
+    <!-- Login Button -->
+    <button class="btn" id="loginBtnMain">
+        <span class="btn-text">Login</span>
+        <span class="loader"></span>
+    </button>
+
+    <!-- Social Login -->
+    <div class="social-login">
+        <p>Or login securely with</p>
+        <div class="social-buttons">
+            <button type="button" class="social-btn google">
+                <i class="fa-brands fa-google"></i> Google
+            </button>
+            <button type="button" class="social-btn facebook">
+                <i class="fa-brands fa-facebook-f"></i> Facebook
+            </button>
+            <button type="button" class="social-btn apple">
+                <i class="fa-brands fa-apple"></i> Apple
+            </button>
+        </div>
+        <small class="oauth-note">
+            Authentication handled securely by the provider.
+        </small>
+    </div>
+
+    <!-- Legal -->
+    <p class="legal">
+        By continuing you agree to our
+        <a href="#">Privacy Policy</a> •
+        <a href="#">Terms & Conditions</a>
+    </p>
+
+    <!-- Support -->
+    <p class="support">
+        Need help? <a href="support.html">24/7 Customer Support</a>
+    </p>
+
+</form>
+
+        <!-- REGISTER -->
+  <form id="registerForm" class="form register-form">
+    
+
+    <h2>REGISTER</h2>
+
+    <!-- الاسم الكامل -->
+    <div class="input-box">
+        <i class="fa fa-user"></i>
+        <input type="text" id="fullName" placeholder="Full Name" required>
+    </div>
+
+    <!--email -->
+    <div class="input-box">
+        <i class="fa fa-envelope"></i>
+        <input type="email" id="email" placeholder="Email" required>
+    </div>
+
+    <!-- كلمة المرور -->
+    <div class="input-box">
+        <i class="fa fa-lock"></i>
+        <input type="password" id="password" placeholder="Password" required>
+    </div>
+
+    <!-- رقم الهوية/البطاقة الوطنية -->
+    <div class="input-box">
+        <i class="fa fa-id-card"></i>
+        <input type="text" id="idNumber" placeholder="National ID / Passport Number" required>
+    </div>
+
+    <!-- رقم الهاتف -->
+    <div class="input-box">
+        <i class="fa fa-phone"></i>
+        <input type="tel" id="phone" placeholder="Phone Number" required>
+    </div>
+
+    <!-- العنوان -->
+    <div class="input-box">
+        <i class="fa fa-home"></i>
+        <input type="text" id="address" placeholder="Address" required>
+    </div>
+
+    <!-- تاريخ الميلاد -->
+    <div class="input-box">
+        <i class="fa fa-birthday-cake"></i>
+        <input type="date" id="dob" placeholder="Date of Birth" required>
+    </div>
+
+    <!-- نوع الحساب -->
+    <div class="input-box">
+        <i class="fa fa-university"></i>
+        <select id="accountType" required>
+            <option value="">Select Account Type</option>
+            <option value="savings">Savings</option>
+            <option value="current">Current</option>
+            <option value="fixed">Fixed Deposit</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn">Register</button>
+</form>
+    </div>
+
+    <!-- OVERLAY PANEL -->
+    <div class="overlay-container">
+        <div class="overlay">
+
+            <div class="overlay-panel overlay-left">
+                <h2>Secure Account Access</h2>
+                <p>Sign in to manage your finances with advanced protection and full control.</p>
+                <button class="ghost" id="loginBtn">Sign In</button>
+            </div>
+
+            <div class="overlay-panel overlay-right">
+                <h2>Empowering Your Financial Future</h2>
+                <p>Join a secure, trusted banking experience designed to protect and grow your assets.</p>
+                <button class="ghost" id="registerBtn">Open an Account</button>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

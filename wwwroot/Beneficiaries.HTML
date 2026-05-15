@@ -1,0 +1,2057 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Beneficiaries — Winners Bank</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp"
+          rel="stylesheet" />
+    <!--GOOGLE FONT "POPPINS"-->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet" />
+    <style>
+        :root {
+            --color-white: #ffffff;
+            --color-light: #f0eff5;
+            --color-gray-light: #86848c;
+            --color-gray-dark: #56555e;
+            --color-dark: #27282f;
+            --color-primary: #24086d;
+            --color-primary-light: rgba(204, 153, 76, 0.607);
+            --color-success: #22ca4b;
+            --color-success-light: rgba(34, 202, 75, 0.15);
+            --color-danger: #ff4336;
+            --color-danger-light: rgba(255, 67, 54, 0.15);
+            --color-warning: #eab507;
+            --color-warning-light: rgba(234, 181, 7, 0.15);
+            --color-purple: #a063f5;
+            --color-purple-light: rgba(160, 99, 245, 0.15);
+            --card-border-radius: 1.6rem;
+            --border-radius-1: 1rem;
+            --border-radius-2: 6px;
+            --card-padding: 1.6rem;
+            --sidebar-width: 220px;
+            --background-color: rgba(199, 148, 53, 0.597);
+        }
+
+        .dark-theme {
+            --color-white: #131315;
+            --color-light: #23232a;
+            --color-dark: #ddd;
+            --color-gray-dark: #adacb5;
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            outline: 0;
+            border: 0;
+            appearance: none;
+            text-decoration: none;
+            list-style: none;
+        }
+
+        html {
+            font-size: 13px;
+        }
+
+        body {
+            font-family: "Poppins", sans-serif;
+            background: var(--color-light);
+            color: var(--color-dark);
+            min-height: 100vh;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+        }
+
+        h4 {
+            font-size: 0.95rem;
+        }
+
+        h5 {
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        p {
+            font-size: 0.85rem;
+            color: var(--color-gray-dark);
+        }
+
+        /* ===== NAVBAR ===== */
+        nav {
+            width: 100%;
+            background: var(--color-white);
+            padding: 0.8rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+        }
+
+            nav .container {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 96%;
+                margin: 0 auto;
+            }
+
+            nav .logo-area {
+                display: flex;
+                align-items: center;
+                gap: 0.6rem;
+            }
+
+            nav .logo-icon {
+                width: 38px;
+                height: 38px;
+                background: var(--color-primary);
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-size: 1.4rem;
+            }
+
+            nav .logo-text {
+                font-size: 1.1rem;
+                font-weight: 700;
+                color: var(--color-primary);
+                letter-spacing: -0.5px;
+            }
+
+                nav .logo-text span {
+                    color: var(--color-primary-light);
+                }
+
+            nav .search-bar {
+                background: var(--color-light);
+                padding: 0.5rem 1rem;
+                width: 30vw;
+                border-radius: var(--border-radius-2);
+                display: flex;
+                align-items: center;
+                gap: 0.8rem;
+                color: var(--color-gray-light);
+            }
+
+                nav .search-bar input {
+                    background: transparent;
+                    width: 100%;
+                    font-family: "Poppins", sans-serif;
+                    font-size: 0.85rem;
+                    color: var(--color-dark);
+                }
+
+                    nav .search-bar input::placeholder {
+                        color: var(--color-gray-light);
+                    }
+
+            nav .profile-area {
+                display: flex;
+                align-items: center;
+                gap: 1.5rem;
+            }
+
+            nav .theme-btn {
+                display: flex;
+                background: var(--color-light);
+                border-radius: var(--border-radius-2);
+                overflow: hidden;
+                cursor: pointer;
+            }
+
+                nav .theme-btn span {
+                    padding: 0.4rem 0.6rem;
+                    font-size: 1.2rem;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: var(--color-gray-light);
+                    transition: all 200ms ease;
+                }
+
+                    nav .theme-btn span.active {
+                        background: var(--color-dark);
+                        color: var(--color-white);
+                        border-radius: var(--border-radius-2);
+                    }
+
+          
+
+        #menu-btn {
+            display: none;
+            background: transparent;
+            cursor: pointer;
+            color: var(--color-dark);
+            font-size: 1.5rem;
+        }
+
+        /* ===== LAYOUT ===== */
+        main {
+            display: grid;
+            grid-template-columns: var(--sidebar-width) 1fr;
+            gap: 2rem;
+            width: 96%;
+            margin: 1.5rem auto 4rem;
+        }
+
+        aside {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 88vh;
+        }
+
+        #close-btn {
+            display: none;
+        }
+
+        .sidebar {
+            padding: 1rem 0;
+            box-shadow: 0 4px 20px rgba(149, 89, 20, 0.05);
+            overflow: hidden;
+        }
+
+            .sidebar a {
+                display: flex;
+                align-items: center;
+                gap: 0.9rem;
+                height: 3.6rem;
+                padding: 0 1.2rem;
+                color: var(--color-gray-light);
+                position: relative;
+                transition: all 250ms ease;
+            }
+
+                .sidebar a span.material-icons-sharp {
+                    font-size: 1.7rem;
+                    margin-left: 3rem;
+                    transition: all 500ms ease;
+                }
+
+                .sidebar a h4 {
+                    font-size: 0.85rem;
+                    font-weight: 500;
+                    white-space: nowrap;
+                }
+
+                .sidebar a.active {
+                    background: var(--color-white);
+                    color: var(--color-primary);
+                }
+
+                    .sidebar a.active::before {
+                        content: "";
+                        width: 6px;
+                        height: 100%;
+                        position: absolute;
+                        background: var(color --color-primary);
+                    }
+
+                .sidebar a:hover {
+                    color: var(--color-primary);
+                }
+
+                    .sidebar a:hover span.material-icons-sharp {
+                        transform: translateX(4px);
+                        margin-left: 2rem;
+                    }
+
+        /* ===== CONTENT ===== */
+        .content {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .page-header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .page-header .icon-box {
+            width: 46px;
+            height: 46px;
+            border-radius: 12px;
+            background: var(--background-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-primary);
+            font-size: 1.5rem;
+        }
+
+        .page-header h2 {
+            font-weight: 600;
+        }
+
+        .page-header p {
+            font-size: 0.8rem;
+            margin-top: 2px;
+        }
+
+        .btn-add {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1.2rem;
+            background: var(--color-primary);
+            color: white;
+            border-radius: var(--border-radius-1);
+            font-family: "Poppins", sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 250ms ease;
+            box-shadow: 0 4px 14px var(--color-primary-light);
+        }
+
+            .btn-add:hover {
+                background: #2a0977;
+                transform: translateY(-1px);
+            }
+
+            .btn-add .material-icons-sharp {
+                font-size: 1.1rem;
+            }
+
+        .card {
+            background: var(--color-white);
+            border-radius: var(--card-border-radius);
+            padding: var(--card-padding);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        /* ===== STATS ===== */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .stat-card {
+            background: var(--color-white);
+            border-radius: var(--border-radius-1);
+            padding: 1.2rem 1.4rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+            .stat-card .stat-icon {
+                width: 44px;
+                height: 44px;
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.4rem;
+                flex-shrink: 0;
+            }
+
+            .stat-card .stat-info h3 {
+                font-size: 1.4rem;
+                font-weight: 700;
+                line-height: 1.2;
+            }
+
+            .stat-card .stat-info p {
+                font-size: 0.75rem;
+                margin-top: 2px;
+            }
+
+        /* ===== FILTERS ===== */
+        .filters-bar {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.4rem;
+        }
+
+        .search-filter {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--color-light);
+            border-radius: var(--border-radius-2);
+            padding: 0.45rem 0.9rem;
+            flex: 1;
+            min-width: 200px;
+        }
+
+            .search-filter input {
+                background: transparent;
+                width: 100%;
+                font-family: "Poppins", sans-serif;
+                font-size: 0.82rem;
+                color: var(--color-dark);
+            }
+
+                .search-filter input::placeholder {
+                    color: var(--color-gray-light);
+                }
+
+            .search-filter .material-icons-sharp {
+                font-size: 1rem;
+                color: var(--color-gray-light);
+            }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--color-light);
+            border-radius: var(--border-radius-2);
+            padding: 0.45rem 0.8rem;
+            font-size: 0.8rem;
+            color: var(--color-gray-dark);
+        }
+
+            .filter-group select {
+                background: transparent;
+                font-family: "Poppins", sans-serif;
+                font-size: 0.8rem;
+                color: var(--color-dark);
+                cursor: pointer;
+            }
+
+            .filter-group .material-icons-sharp {
+                font-size: 1rem;
+                color: var(--color-gray-light);
+            }
+
+        /* View toggle */
+        .view-toggle {
+            display: flex;
+            gap: 0.3rem;
+            margin-left: auto;
+        }
+
+        .view-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--border-radius-2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background: var(--color-light);
+            color: var(--color-gray-light);
+            transition: all 200ms ease;
+        }
+
+            .view-btn.active {
+                background: var(--color-primary);
+                color: white;
+            }
+
+            .view-btn .material-icons-sharp {
+                font-size: 1.1rem;
+            }
+
+        /* ===== GRID VIEW ===== */
+        .beneficiaries-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .bene-card {
+            background: var(--color-light);
+            border-radius: var(--border-radius-1);
+            padding: 1.4rem 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.6rem;
+            cursor: pointer;
+            transition: all 250ms ease;
+            position: relative;
+            border: 1.5px solid transparent;
+        }
+
+            .bene-card:hover {
+                background: var(--color-white);
+                border-color: var(--color-primary-light);
+                box-shadow: 0 6px 20px rgba(71, 7, 234, 0.1);
+                transform: translateY(-2px);
+            }
+
+            .bene-card .fav-btn {
+                position: absolute;
+                top: 0.7rem;
+                right: 0.7rem;
+                background: none;
+                cursor: pointer;
+                color: var(--color-gray-light);
+                font-size: 1rem;
+                transition: color 200ms ease;
+            }
+
+                .bene-card .fav-btn.active {
+                    color: #eab507;
+                }
+
+            .bene-card .avatar {
+                width: 56px;
+                height: 56px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.1rem;
+                font-weight: 700;
+                color: white;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            }
+
+            .bene-card .bene-name {
+                font-weight: 600;
+                font-size: 0.9rem;
+                text-align: center;
+            }
+
+            .bene-card .bene-bank {
+                font-size: 0.72rem;
+                color: var(--color-gray-light);
+            }
+
+            .bene-card .bene-acc {
+                font-size: 0.78rem;
+                color: var(--color-gray-dark);
+                font-weight: 500;
+            }
+
+            .bene-card .badge-freq {
+                font-size: 0.68rem;
+                padding: 0.2rem 0.6rem;
+                border-radius: 20px;
+                font-weight: 500;
+            }
+
+            .bene-card .card-actions {
+                display: flex;
+                gap: 0.5rem;
+                margin-top: 0.4rem;
+                width: 100%;
+            }
+
+                .bene-card .card-actions button {
+                    flex: 1;
+                    padding: 0.45rem;
+                    border-radius: var(--border-radius-2);
+                    font-family: "Poppins", sans-serif;
+                    font-size: 0.75rem;
+                    font-weight: 500;
+                    cursor: pointer;
+                    transition: all 200ms ease;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 0.3rem;
+                }
+
+                .bene-card .card-actions .btn-send {
+                    background: var(--color-primary);
+                    color: white;
+                }
+
+                    .bene-card .card-actions .btn-send:hover {
+                        background: #3800c0;
+                    }
+
+                .bene-card .card-actions .btn-more {
+                    background: var(--color-light);
+                    color: var(--color-gray-dark);
+                }
+
+                    .bene-card .card-actions .btn-more:hover {
+                        background: var(--color-danger-light);
+                        color: var(--color-danger);
+                    }
+
+                .bene-card .card-actions .material-icons-sharp {
+                    font-size: 0.9rem;
+                }
+
+        /* ===== LIST VIEW ===== */
+        .beneficiaries-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .bene-list-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.9rem 1rem;
+            border-radius: var(--border-radius-1);
+            background: var(--color-light);
+            cursor: pointer;
+            transition: all 200ms ease;
+            border: 1.5px solid transparent;
+        }
+
+            .bene-list-item:hover {
+                background: var(--color-white);
+                border-color: var(--color-primary-light);
+                box-shadow: 0 4px 14px rgba(71, 7, 234, 0.08);
+            }
+
+            .bene-list-item .avatar {
+                width: 42px;
+                height: 42px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 0.9rem;
+                font-weight: 700;
+                color: white;
+                flex-shrink: 0;
+            }
+
+            .bene-list-item .bene-info {
+                flex: 1;
+            }
+
+            .bene-list-item .bene-name {
+                font-weight: 600;
+                font-size: 0.88rem;
+            }
+
+            .bene-list-item .bene-sub {
+                font-size: 0.75rem;
+                color: var(--color-gray-light);
+                margin-top: 2px;
+            }
+
+            .bene-list-item .bene-acc-right {
+                font-size: 0.82rem;
+                font-weight: 500;
+                color: var(--color-gray-dark);
+                white-space: nowrap;
+            }
+
+            .bene-list-item .list-actions {
+                display: flex;
+                gap: 0.4rem;
+            }
+
+                .bene-list-item .list-actions button {
+                    padding: 0.35rem 0.7rem;
+                    border-radius: var(--border-radius-2);
+                    font-family: "Poppins", sans-serif;
+                    font-size: 0.75rem;
+                    font-weight: 500;
+                    cursor: pointer;
+                    transition: all 200ms ease;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.25rem;
+                }
+
+                .bene-list-item .list-actions .btn-send {
+                    background: var(--color-primary);
+                    color: white;
+                }
+
+                    .bene-list-item .list-actions .btn-send:hover {
+                        background: #3800c0;
+                    }
+
+                .bene-list-item .list-actions .btn-del {
+                    background: var(--color-danger-light);
+                    color: var(--color-danger);
+                }
+
+                    .bene-list-item .list-actions .btn-del:hover {
+                        background: var(--color-danger);
+                        color: white;
+                    }
+
+                .bene-list-item .list-actions .material-icons-sharp {
+                    font-size: 0.9rem;
+                }
+
+            .bene-list-item .fav-star {
+                color: var(--color-gray-light);
+                font-size: 1rem;
+                cursor: pointer;
+                transition: color 200ms;
+            }
+
+                .bene-list-item .fav-star.active {
+                    color: #eab507;
+                }
+
+        /* Loading spinner */
+        .loading-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid var(--color-light);
+            border-top-color: var(--color-primary);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* empty state */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+            .empty-state .material-icons-sharp {
+                font-size: 3rem;
+                color: var(--color-gray-light);
+            }
+
+            .empty-state h4 {
+                color: var(--color-gray-dark);
+            }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 0.8rem 1.4rem;
+            border-radius: var(--border-radius-1);
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 500;
+            z-index: 999;
+            animation: slideInToast 300ms ease;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        @keyframes slideInToast {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 300;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(3px);
+        }
+
+            .modal-overlay.open {
+                display: flex;
+                animation: fadeIn 200ms ease;
+            }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal {
+            background: var(--color-white);
+            border-radius: var(--card-border-radius);
+            padding: 2rem;
+            width: 440px;
+            max-width: 95vw;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            animation: slideUp 250ms ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+            .modal-header h3 {
+                font-size: 1.1rem;
+                font-weight: 600;
+            }
+
+        .modal-close {
+            background: var(--color-light);
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--color-gray-dark);
+            font-size: 1.1rem;
+            transition: all 200ms;
+        }
+
+            .modal-close:hover {
+                background: var(--color-danger-light);
+                color: var(--color-danger);
+            }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            margin-bottom: 1rem;
+        }
+
+            .form-group label {
+                font-size: 0.8rem;
+                font-weight: 500;
+                color: var(--color-gray-dark);
+            }
+
+        .input-wrap {
+            position: relative;
+        }
+
+            .input-wrap .material-icons-sharp {
+                position: absolute;
+                left: 0.8rem;
+                top: 50%;
+                transform: translateY(-50%);
+                font-size: 1.1rem;
+                color: var(--color-gray-light);
+                pointer-events: none;
+            }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem 0.9rem 0.75rem 2.4rem;
+            border-radius: var(--border-radius-1);
+            border: 1.5px solid #e0dff0;
+            font-family: "Poppins", sans-serif;
+            font-size: 0.85rem;
+            color: var(--color-dark);
+            background: var(--color-light);
+            transition: border-color 200ms, box-shadow 200ms;
+        }
+
+            .form-group input:focus,
+            .form-group select:focus {
+                border-color: var(--color-primary);
+                box-shadow: 0 0 0 3px var(--color-primary-light);
+                background: var(--color-white);
+            }
+
+        .error-msg {
+            font-size: 0.72rem;
+            color: var(--color-danger);
+            min-height: 1rem;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 0.5rem;
+        }
+
+        .btn-cancel {
+            flex: 1;
+            padding: 0.75rem;
+            background: var(--color-light);
+            color: var(--color-gray-dark);
+            border-radius: var(--border-radius-1);
+            font-family: "Poppins", sans-serif;
+            font-size: 0.88rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 200ms;
+        }
+
+            .btn-cancel:hover {
+                background: #e0dff0;
+            }
+
+        .btn-save {
+            flex: 1;
+            padding: 0.75rem;
+            background: var(--color-primary);
+            color: white;
+            border-radius: var(--border-radius-1);
+            font-family: "Poppins", sans-serif;
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 200ms;
+            box-shadow: 0 4px 14px var(--color-primary-light);
+        }
+
+            .btn-save:hover {
+                background: #3800c0;
+            }
+
+            .btn-save:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+            }
+
+        /* confirm delete modal */
+        .confirm-modal {
+            width: 360px;
+            text-align: center;
+        }
+
+            .confirm-modal .icon {
+                font-size: 2.5rem;
+                color: var(--color-danger);
+                margin-bottom: 0.8rem;
+            }
+
+            .confirm-modal h3 {
+                margin-bottom: 0.5rem;
+            }
+
+            .confirm-modal p {
+                margin-bottom: 1.5rem;
+            }
+
+        .btn-delete-confirm {
+            flex: 1;
+            padding: 0.75rem;
+            background: var(--color-danger);
+            color: white;
+            border-radius: var(--border-radius-1);
+            font-family: "Poppins", sans-serif;
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 200ms;
+        }
+
+            .btn-delete-confirm:hover {
+                background: #c0392b;
+            }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 900px) {
+            main {
+                grid-template-columns: 1fr;
+            }
+
+            aside {
+                position: fixed;
+                left: -100%;
+                top: 0;
+                height: 100vh;
+                width: var(--sidebar-width);
+                z-index: 200;
+                background: var(--color-white);
+                transition: left 300ms ease;
+                box-shadow: 4px 0 20px rgba(0,0,0,0.15);
+            }
+
+                aside.open {
+                    left: 0;
+                }
+
+            #close-btn {
+                display: flex;
+                margin: 1rem;
+                cursor: pointer;
+                background: none;
+                color: var(--color-dark);
+                font-size: 1.4rem;
+            }
+
+            #menu-btn {
+                display: flex;
+            }
+
+            nav .search-bar {
+                width: 40vw;
+            }
+
+            .stats-row {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .stats-row {
+                grid-template-columns: 1fr;
+            }
+
+            .beneficiaries-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav>
+        <div class="container">
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <span class="material-icons-sharp">account_balance</span>
+                </div>
+                <div class="logo-text">Winners<span>Bank</span></div>
+            </div>
+            <div class="search-bar">
+                <span class="material-icons-sharp">search</span>
+                <input type="search" placeholder="Search transactions, beneficiaries…" />
+            </div>
+            <div class="profile-area">
+                <div class="theme-btn" onclick="toggleTheme()">
+                    <span class="material-icons-sharp active" id="lightIcon">light_mode</span>
+                    <span class="material-icons-sharp" id="darkIcon">dark_mode</span>
+                </div>
+                <div class="profile">
+                    <h3 id="username"></h3>
+
+                </div>
+                <button id="menu-btn" onclick="toggleSidebar()">
+                    <span class="material-icons-sharp">menu</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN -->
+    <main>
+        <!-- SIDEBAR -->
+        <aside id="sidebar">
+            <button id="close-btn" onclick="toggleSidebar()">
+                <span class="material-icons-sharp">close</span>
+            </button>
+            <div class="sidebar">
+                <a href="index.html"><span class="material-icons-sharp">dashboard</span><h4>Dashboard</h4></a>
+                <a href="transfer.html"><span class="material-icons-sharp">send</span><h4>Transfer Money</h4></a>
+                <a href="transfer_his.html"><span class="material-icons-sharp">history</span><h4>Transfer History</h4></a>
+                <a href="Beneficiaries.HTML" class="active"><span class="material-icons-sharp">group</span><h4>Beneficiaries</h4></a>
+                <a href="bills.html"><span class="material-icons-sharp">payment</span><h4>Bills Payment</h4></a>
+                <a href="adminmonitor.html"><span class="material-icons-sharp">admin_panel_settings</span><h4>Admin Panel</h4></a>
+                <a href="settings.html"><span class="material-icons-sharp">settings</span><h4>Settings & Security</h4></a>
+                <a href="support.html"><span class="material-icons-sharp">help_center</span><h4>Support</h4></a>
+                <a href="logout.html" id="logout-link"><span class="material-icons-sharp">logout</span><h4>Logout</h4></a>
+            </div>
+        </aside>
+
+        <!-- CONTENT -->
+        <div class="content">
+            <!-- Header -->
+            <div class="page-header">
+                <div class="page-header-left">
+                    <div class="icon-box">
+                        <span class="material-icons-sharp">group</span>
+                    </div>
+                    <div>
+                        <h2>Beneficiaries</h2>
+                        <p>Manage your saved transfer contacts</p>
+                    </div>
+                </div>
+                <button class="btn-add" onclick="openAddModal()">
+                    <span class="material-icons-sharp">person_add</span>
+                    Add Beneficiary
+                </button>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:var(--color-primary-light);color:var(--color-primary);">
+                        <span class="material-icons-sharp">group</span>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="statTotal">—</h3>
+                        <p>Total Beneficiaries</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:var(--color-warning-light);color:var(--color-warning);">
+                        <span class="material-icons-sharp">star</span>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="statFav">—</h3>
+                        <p>Favourites</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:var(--color-success-light);color:var(--color-success);">
+                        <span class="material-icons-sharp">account_balance</span>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="statBanks">—</h3>
+                        <p>Banks</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table/Grid Card -->
+            <div class="card">
+                <div class="filters-bar">
+                    <div class="search-filter">
+                        <span class="material-icons-sharp">search</span>
+                        <input type="text" id="searchInput" placeholder="Search by name or account…" oninput="renderBeneficiaries()" />
+                    </div>
+                    <div class="filter-group">
+                        <span class="material-icons-sharp">account_balance</span>
+                        <select id="bankFilter" onchange="renderBeneficiaries()">
+                            <option value="">All Banks</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <span class="material-icons-sharp">star</span>
+                        <select id="favFilter" onchange="renderBeneficiaries()">
+                            <option value="">All</option>
+                            <option value="fav">Favourites Only</option>
+                        </select>
+                    </div>
+                    <div class="view-toggle">
+                        <div class="view-btn active" id="gridBtn" onclick="setView('grid')">
+                            <span class="material-icons-sharp">grid_view</span>
+                        </div>
+                        <div class="view-btn" id="listBtn" onclick="setView('list')">
+                            <span class="material-icons-sharp">view_list</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Loading -->
+                <div class="loading-state" id="loadingState">
+                    <div class="spinner"></div>
+                    <p>Loading beneficiaries…</p>
+                </div>
+
+                <!-- Grid -->
+                <div class="beneficiaries-grid" id="gridView" style="display:none;"></div>
+                <!-- List -->
+                <div class="beneficiaries-list" id="listView" style="display:none;"></div>
+                <!-- Empty -->
+                <div class="empty-state" id="emptyState">
+                    <span class="material-icons-sharp">person_search</span>
+                    <h4>No beneficiaries found</h4>
+                    <p>Try a different search or add a new one.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ADD MODAL -->
+    <div class="modal-overlay" id="addModal" onclick="closeOnOverlay(event,'addModal')">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modalTitle">Add Beneficiary</h3>
+                <div class="modal-close" onclick="closeModal('addModal')">
+                    <span class="material-icons-sharp">close</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Full Name</label>
+                <div class="input-wrap">
+                    <span class="material-icons-sharp">person</span>
+                    <input type="text" id="inputName" placeholder="e.g. Sara Ahmed" />
+                </div>
+                <div class="error-msg" id="errName"></div>
+            </div>
+
+            <div class="form-group">
+                <label>Account Number</label>
+                <div class="input-wrap">
+                    <span class="material-icons-sharp">credit_card</span>
+                    <input type="text" id="inputAcc" placeholder="e.g. WIN1234567890" />
+                </div>
+                <div class="error-msg" id="errAcc"></div>
+            </div>
+
+            <div class="form-group">
+                <label>Bank</label>
+                <div class="input-wrap">
+                    <span class="material-icons-sharp">account_balance</span>
+                    <select id="inputBank">
+                        <option value="Winners Bank">Winners Bank</option>
+                        <option value="CIB">CIB</option>
+                        <option value="NBE">NBE</option>
+                        <option value="QNB">QNB</option>
+                        <option value="Banque Misr">Banque Misr</option>
+                        <option value="HSBC">HSBC</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal('addModal')">Cancel</button>
+                <button class="btn-save" id="btnSave" onclick="saveBeneficiary()">Save Beneficiary</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- DELETE CONFIRM MODAL -->
+    <div class="modal-overlay" id="deleteModal" onclick="closeOnOverlay(event,'deleteModal')">
+        <div class="modal confirm-modal">
+            <span class="material-icons-sharp icon">delete_forever</span>
+            <h3>Delete Beneficiary?</h3>
+            <p>This action cannot be undone. The beneficiary will be permanently removed.</p>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal('deleteModal')">Cancel</button>
+                <button class="btn-delete-confirm" onclick="confirmDelete()">Yes, Delete</button>
+            </div>
+        </div>
+    </div>
+    <script>
+  // ========== CONSTANTS ==========
+  const COLORS = [
+    "linear-gradient(135deg,#a063f5,#4707ea)",
+    "linear-gradient(135deg,#4f8ef7,#0d1b3e)",
+    "linear-gradient(135deg,#22ca4b,#0d6e2c)",
+    "linear-gradient(135deg,#eab507,#b87a00)",
+    "linear-gradient(135deg,#ff4336,#9b1c1c)",
+    "linear-gradient(135deg,#38d9a9,#0b6e5a)",
+    "linear-gradient(135deg,#f78c6c,#b04a1e)",
+    "linear-gradient(135deg,#7c83fd,#3a3fc2)",
+  ];
+
+  // ========== STATE ==========
+  let beneficiaries = [];
+  let favourites = new Set();
+  let deleteTargetId = null;
+  let currentView = "grid";
+
+  // ========== AUTH ==========
+  function getToken() {
+    return localStorage.getItem("token");
+  }
+
+  function redirectLogin() {
+    localStorage.removeItem("token");
+    window.location.href = "login.html";
+  }
+
+  // ========== TOAST ==========
+  function showToast(msg, success = true) {
+    const t = document.createElement("div");
+
+    t.className = "toast";
+    t.style.background = success
+      ? "var(--color-success)"
+      : "var(--color-danger)";
+
+    t.textContent = msg;
+
+    document.body.appendChild(t);
+
+    setTimeout(() => {
+      t.remove();
+    }, 3000);
+  }
+
+  // ========== LOAD USER INFO ==========
+  async function loadUserInfo() {
+    const token = getToken();
+
+    if (!token) {
+      redirectLogin();
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/Auth/me", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.ok) {
+        const user = await res.json();
+
+        const name =
+          user.username ||
+          user.email ||
+          "User";
+
+        const navName =
+          document.getElementById("navName");
+
+        const navInitials =
+          document.getElementById("navInitials");
+
+        if (navName) {
+          navName.textContent = name;
+        }
+
+        if (navInitials) {
+          navInitials.textContent =
+            name.slice(0, 2).toUpperCase();
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  // ========== LOAD BENEFICIARIES ==========
+  async function loadBeneficiaries() {
+    const token = getToken();
+
+    if (!token) {
+      redirectLogin();
+      return;
+    }
+
+    try {
+      const res = await fetch(
+        "/api/Banking/beneficiaries",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (res.status === 401) {
+        redirectLogin();
+        return;
+      }
+
+      const data = await res.json();
+
+      if (!Array.isArray(data)) {
+        throw new Error("Invalid API response");
+      }
+
+      beneficiaries = data.map((b, i) => ({
+        id: b.id,
+        name: b.name || "Unknown",
+        acc: String(b.accountNumber || ""),
+        bank: b.bankName || "Winners Bank",
+        color: COLORS[i % COLORS.length],
+      }));
+
+      const loadingState =
+        document.getElementById("loadingState");
+
+      const gridView =
+        document.getElementById("gridView");
+
+      const listView =
+        document.getElementById("listView");
+
+      if (loadingState) {
+        loadingState.style.display = "none";
+      }
+
+      if (gridView) {
+        gridView.style.display =
+          currentView === "grid"
+            ? "grid"
+            : "none";
+      }
+
+      if (listView) {
+        listView.style.display =
+          currentView === "list"
+            ? "flex"
+            : "none";
+      }
+
+      populateBankFilter();
+      renderBeneficiaries();
+    } catch (error) {
+      console.error(error);
+
+      const loadingState =
+        document.getElementById("loadingState");
+
+      if (loadingState) {
+        loadingState.innerHTML = `
+          <p style="color:var(--color-danger);">
+            ❌ Failed to load beneficiaries.
+          </p>
+        `;
+      }
+    }
+  }
+
+  // ========== HELPERS ==========
+  function initials(name = "") {
+    return name
+      .split(" ")
+      .map(word => word[0] || "")
+      .join("")
+      .toUpperCase()
+      .slice(0, 2);
+  }
+
+  function masked(acc = "") {
+    return "****" + String(acc).slice(-4);
+  }
+
+  function updateStats() {
+    const total =
+      document.getElementById("statTotal");
+
+    const fav =
+      document.getElementById("statFav");
+
+    const banksCount =
+      document.getElementById("statBanks");
+
+    if (total) {
+      total.textContent =
+        beneficiaries.length.toString();
+    }
+
+    if (fav) {
+      fav.textContent =
+        favourites.size.toString();
+    }
+
+    const banks = new Set(
+      beneficiaries.map(b => b.bank)
+    );
+
+    if (banksCount) {
+      banksCount.textContent =
+        banks.size.toString();
+    }
+  }
+
+  function populateBankFilter() {
+    const sel =
+      document.getElementById("bankFilter");
+
+    if (!sel) return;
+
+    const banks = [
+      ...new Set(
+        beneficiaries.map(b => b.bank)
+      ),
+    ];
+
+    sel.innerHTML =
+      '<option value="">All Banks</option>' +
+      banks
+        .map(
+          bank =>
+            `<option value="${bank}">
+              ${bank}
+            </option>`
+        )
+        .join("");
+  }
+
+  function getFiltered() {
+    const searchInput =
+      document.getElementById("searchInput");
+
+    const bankFilter =
+      document.getElementById("bankFilter");
+
+    const favFilter =
+      document.getElementById("favFilter");
+
+    const q =
+      searchInput?.value
+        ?.toLowerCase()
+        ?.trim() || "";
+
+    const bank =
+      bankFilter?.value || "";
+
+    const fav =
+      favFilter?.value || "";
+
+    return beneficiaries.filter(b => {
+      const matchQ =
+        b.name
+          .toLowerCase()
+          .includes(q) ||
+        b.acc.includes(q);
+
+      const matchB =
+        !bank || b.bank === bank;
+
+      const matchF =
+        !fav || favourites.has(b.id);
+
+      return (
+        matchQ &&
+        matchB &&
+        matchF
+      );
+    });
+  }
+
+  // ========== RENDER ==========
+  function renderBeneficiaries() {
+    const list = getFiltered();
+
+    const grid =
+      document.getElementById("gridView");
+
+    const listV =
+      document.getElementById("listView");
+
+    const empty =
+      document.getElementById("emptyState");
+
+    if (!grid || !listV || !empty) {
+      return;
+    }
+
+    if (list.length === 0) {
+      grid.innerHTML = "";
+      listV.innerHTML = "";
+
+      empty.style.display = "flex";
+
+      updateStats();
+      return;
+    }
+
+    empty.style.display = "none";
+
+    // GRID
+    grid.innerHTML = list
+      .map(
+        b => `
+      <div class="bene-card">
+        <span
+          class="material-icons-sharp fav-btn ${
+            favourites.has(b.id)
+              ? "active"
+              : ""
+          }"
+          onclick="toggleFav(${b.id})"
+        >
+          ${
+            favourites.has(b.id)
+              ? "star"
+              : "star_border"
+          }
+        </span>
+
+        <div
+          class="avatar"
+          style="background:${b.color}"
+        >
+          ${initials(b.name)}
+        </div>
+
+        <div class="bene-name">
+          ${b.name}
+        </div>
+
+        <div class="bene-bank">
+          ${b.bank}
+        </div>
+
+        <div class="bene-acc">
+          ${masked(b.acc)}
+        </div>
+
+        <div class="card-actions">
+          <button
+            class="btn-send"
+            onclick="sendTo(${b.id})"
+          >
+            <span class="material-icons-sharp">
+              send
+            </span>
+            Send
+          </button>
+
+          <button
+            class="btn-more"
+            onclick="deleteBene(${b.id})"
+          >
+            <span class="material-icons-sharp">
+              delete
+            </span>
+          </button>
+        </div>
+      </div>
+    `
+      )
+      .join("");
+
+    // LIST
+    listV.innerHTML = list
+      .map(
+        b => `
+      <div class="bene-list-item">
+
+        <div
+          class="avatar"
+          style="background:${b.color}"
+        >
+          ${initials(b.name)}
+        </div>
+
+        <div class="bene-info">
+          <div class="bene-name">
+            ${b.name}
+          </div>
+
+          <div class="bene-sub">
+            ${b.bank} · ${masked(b.acc)}
+          </div>
+        </div>
+
+        <span
+          class="material-icons-sharp fav-star ${
+            favourites.has(b.id)
+              ? "active"
+              : ""
+          }"
+          onclick="toggleFav(${b.id})"
+        >
+          ${
+            favourites.has(b.id)
+              ? "star"
+              : "star_border"
+          }
+        </span>
+
+        <div class="list-actions">
+          <button
+            class="btn-send"
+            onclick="sendTo(${b.id})"
+          >
+            <span class="material-icons-sharp">
+              send
+            </span>
+            Send
+          </button>
+
+          <button
+            class="btn-del"
+            onclick="deleteBene(${b.id})"
+          >
+            <span class="material-icons-sharp">
+              delete
+            </span>
+          </button>
+        </div>
+      </div>
+    `
+      )
+      .join("");
+
+    updateStats();
+  }
+
+  // ========== VIEW ==========
+  function setView(v) {
+    currentView = v;
+
+    const gridView =
+      document.getElementById("gridView");
+
+    const listView =
+      document.getElementById("listView");
+
+    const gridBtn =
+      document.getElementById("gridBtn");
+
+    const listBtn =
+      document.getElementById("listBtn");
+
+    if (gridView) {
+      gridView.style.display =
+        v === "grid"
+          ? "grid"
+          : "none";
+    }
+
+    if (listView) {
+      listView.style.display =
+        v === "list"
+          ? "flex"
+          : "none";
+    }
+
+    if (gridBtn) {
+      gridBtn.classList.toggle(
+        "active",
+        v === "grid"
+      );
+    }
+
+    if (listBtn) {
+      listBtn.classList.toggle(
+        "active",
+        v === "list"
+      );
+    }
+  }
+
+  // ========== FAV ==========
+  function toggleFav(id) {
+    if (favourites.has(id)) {
+      favourites.delete(id);
+    } else {
+      favourites.add(id);
+    }
+
+    renderBeneficiaries();
+  }
+
+  // ========== SEND ==========
+  function sendTo(id) {
+    const b = beneficiaries.find(
+      x => x.id === id
+    );
+
+    if (b) {
+      window.location.href =
+        `transfer.html?acc=${b.acc}&name=` +
+        encodeURIComponent(b.name);
+    }
+  }
+
+  // ========== ADD MODAL ==========
+  function openAddModal() {
+    const modalTitle =
+      document.getElementById("modalTitle");
+
+    const inputName =
+      document.getElementById("inputName");
+
+    const inputAcc =
+      document.getElementById("inputAcc");
+
+    const inputBank =
+      document.getElementById("inputBank");
+
+    const errName =
+      document.getElementById("errName");
+
+    const errAcc =
+      document.getElementById("errAcc");
+
+    const addModal =
+      document.getElementById("addModal");
+
+    if (modalTitle) {
+      modalTitle.textContent =
+        "Add Beneficiary";
+    }
+
+    if (inputName) {
+      inputName.value = "";
+    }
+
+    if (inputAcc) {
+      inputAcc.value = "";
+    }
+
+    if (inputBank) {
+      inputBank.value =
+        "Winners Bank";
+    }
+
+    if (errName) {
+      errName.textContent = "";
+    }
+
+    if (errAcc) {
+      errAcc.textContent = "";
+    }
+
+    if (addModal) {
+      addModal.classList.add("open");
+    }
+  }
+
+  // ========== CLOSE MODAL ==========
+  function closeModal(id) {
+    const modal =
+      document.getElementById(id);
+
+    if (modal) {
+      modal.classList.remove("open");
+    }
+  }
+
+  function closeOnOverlay(e, id) {
+    const modal =
+      document.getElementById(id);
+
+    if (modal && e.target === modal) {
+      closeModal(id);
+    }
+  }
+
+  // ========== THEME ==========
+  function toggleTheme() {
+    document.body.classList.toggle(
+      "dark-theme"
+    );
+
+    const light =
+      !document.body.classList.contains(
+        "dark-theme"
+      );
+
+    const lightIcon =
+      document.getElementById("lightIcon");
+
+    const darkIcon =
+      document.getElementById("darkIcon");
+
+    if (lightIcon) {
+      lightIcon.classList.toggle(
+        "active",
+        light
+      );
+    }
+
+    if (darkIcon) {
+      darkIcon.classList.toggle(
+        "active",
+        !light
+      );
+    }
+  }
+
+  // ========== SIDEBAR ==========
+  function toggleSidebar() {
+    const sidebar =
+      document.getElementById("sidebar");
+
+    if (sidebar) {
+      sidebar.classList.toggle("open");
+    }
+  }
+
+  // ========== SEARCH ==========
+  const navbarSearch =
+    document.querySelector(
+      ".search-bar input"
+    );
+
+  if (
+    navbarSearch instanceof
+    HTMLInputElement
+  ) {
+    const searchDropdown =
+      document.createElement("div");
+
+    searchDropdown.className =
+      "search-dropdown";
+
+    searchDropdown.style.cssText = `
+      position:absolute;
+      top:100%;
+      left:0;
+      right:0;
+      background:white;
+      border-radius:10px;
+      box-shadow:0 4px 20px rgba(0,0,0,0.15);
+      z-index:1000;
+      display:none;
+      max-height:300px;
+      overflow-y:auto;
+    `;
+
+    const searchBarContainer =
+      document.querySelector(
+        ".search-bar"
+      );
+
+    if (searchBarContainer) {
+      searchBarContainer.style.position =
+        "relative";
+
+      searchBarContainer.appendChild(
+        searchDropdown
+      );
+    }
+
+    const searchItems = [
+      {
+        name: "Dashboard",
+        icon: "dashboard",
+        url: "index.html",
+      },
+      {
+        name: "Transfer Money",
+        icon: "send",
+        url: "transfer.html",
+      },
+      {
+        name: "Beneficiaries",
+        icon: "group",
+        url: "Beneficiaries.HTML",
+      },
+    ];
+
+    navbarSearch.addEventListener(
+      "input",
+      function (e) {
+        const term =
+          e.target.value
+            .toLowerCase()
+            .trim();
+
+        if (!term) {
+          searchDropdown.style.display =
+            "none";
+          return;
+        }
+
+        const filtered =
+          searchItems.filter(item =>
+            item.name
+              .toLowerCase()
+              .includes(term)
+          );
+
+        if (!filtered.length) {
+          searchDropdown.innerHTML = `
+            <div style="padding:12px;color:#888;">
+              No results found
+            </div>
+          `;
+        } else {
+          searchDropdown.innerHTML =
+            filtered
+              .map(
+                item => `
+              <div
+                class="search-item"
+                data-url="${item.url}"
+                style="
+                  display:flex;
+                  align-items:center;
+                  gap:12px;
+                  padding:12px 16px;
+                  cursor:pointer;
+                "
+              >
+                <span class="material-icons-sharp">
+                  ${item.icon}
+                </span>
+
+                <span>
+                  ${item.name}
+                </span>
+              </div>
+            `
+              )
+              .join("");
+
+          document
+            .querySelectorAll(
+              ".search-item"
+            )
+            .forEach(el => {
+              el.onclick = () => {
+                const url =
+                  el.dataset.url || "#";
+
+                window.location.href =
+                  url;
+              };
+            });
+        }
+
+        searchDropdown.style.display =
+          "block";
+      }
+    );
+
+    document.addEventListener(
+      "click",
+      e => {
+        if (
+          searchBarContainer &&
+          e.target instanceof Node &&
+          !searchBarContainer.contains(
+            e.target
+          )
+        ) {
+          searchDropdown.style.display =
+            "none";
+        }
+      }
+    );
+  }
+
+  // ========== INIT ==========
+  loadUserInfo();
+  loadBeneficiaries();
+    </script>
+    <script>
+    const username = localStorage.getItem("fullName");
+
+    if (username) {
+        document.getElementById("username").innerText = username;
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,1370 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Transfer History — Winners Bank</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp"
+          rel="stylesheet" />
+    <!--GOOGLE FONT "POPPINS"-->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet" />
+    <style>
+        /* ===== ROOT VARIABLES ===== */
+        :root {
+            --color-white: #ffffff;
+            --color-light: #f0eff5;
+            --color-gray-light: #86848c;
+            --color-gray-dark: #56555e;
+            --color-dark: #27282f;
+            --color-primary: #24086d;
+            --color-primary-light: rgba(204, 153, 76, 0.607);
+            --color-success: #22ca4b;
+            --color-success-light: rgba(34, 202, 75, 0.15);
+            --color-danger: #ff4336;
+            --color-danger-light: rgba(255, 67, 54, 0.15);
+            --color-warning: #eab507;
+            --color-warning-light: rgba(234, 181, 7, 0.15);
+            --color-purple: #a063f5;
+            --color-purple-light: rgba(160, 99, 245, 0.15);
+            --card-border-radius: 1.6rem;
+            --border-radius-1: 1rem;
+            --border-radius-2: 6px;
+            --card-padding: 1.6rem;
+            --sidebar-width: 220px;
+            --background-color: rgba(199, 148, 53, 0.597);
+        }
+
+        .dark-theme {
+            --color-white: #131315;
+            --color-light: #23232a;
+            --color-dark: #ddd;
+            --color-gray-dark: #adacb5;
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            outline: 0;
+            border: 0;
+            appearance: none;
+            text-decoration: none;
+            list-style: none;
+        }
+
+        html {
+            font-size: 13px;
+        }
+
+        body {
+            font-family: "Poppins", sans-serif;
+            background: var(--color-light);
+            color: var(--color-dark);
+            min-height: 100vh;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+        }
+
+        h4 {
+            font-size: 0.95rem;
+        }
+
+        h5 {
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        p {
+            font-size: 0.85rem;
+            color: var(--color-gray-dark);
+        }
+
+        /* ===== NAVBAR ===== */
+        nav {
+            width: 100%;
+            background: var(--color-white);
+            padding: 0.8rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+        }
+
+            nav .container {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 96%;
+                margin: 0 auto;
+            }
+
+            nav .logo-area {
+                display: flex;
+                align-items: center;
+                gap: 0.6rem;
+            }
+
+            nav .logo-icon {
+                width: 38px;
+                height: 38px;
+                background: var(--color-primary);
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-size: 1.4rem;
+            }
+
+            nav .logo-text {
+                font-size: 1.1rem;
+                font-weight: 700;
+                color: var(--color-primary);
+                letter-spacing: -0.5px;
+            }
+
+                nav .logo-text span {
+                    color: var(--color-primary-light);
+                }
+
+            nav .search-bar {
+                background: var(--color-light);
+                padding: 0.5rem 1rem;
+                width: 30vw;
+                border-radius: var(--border-radius-2);
+                display: flex;
+                align-items: center;
+                gap: 0.8rem;
+                color: var(--color-gray-light);
+            }
+
+                nav .search-bar input {
+                    background: transparent;
+                    width: 100%;
+                    font-family: "Poppins", sans-serif;
+                    font-size: 0.85rem;
+                    color: var(--color-dark);
+                }
+
+                    nav .search-bar input::placeholder {
+                        color: var(--color-gray-light);
+                    }
+
+            nav .profile-area {
+                display: flex;
+                align-items: center;
+                gap: 1.5rem;
+            }
+
+            nav .theme-btn {
+                display: flex;
+                background: var(--color-light);
+                border-radius: var(--border-radius-2);
+                overflow: hidden;
+                cursor: pointer;
+            }
+
+                nav .theme-btn span {
+                    padding: 0.4rem 0.6rem;
+                    font-size: 1.2rem;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: var(--color-gray-light);
+                    transition: all 200ms ease;
+                }
+
+                    nav .theme-btn span.active {
+                        background: var(--color-dark);
+                        color: var(--color-white);
+                        border-radius: var(--border-radius-2);
+                    }
+
+
+
+
+
+           
+
+        #menu-btn {
+            display: none;
+            background: transparent;
+            cursor: pointer;
+            color: var(--color-dark);
+            font-size: 1.5rem;
+        }
+
+        /* ===== LAYOUT ===== */
+        main {
+            display: grid;
+            grid-template-columns: var(--sidebar-width) 1fr;
+            gap: 2rem;
+            width: 96%;
+            margin: 1rem auto 4rem;
+        }
+
+        aside {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 88vh;
+            margin-top: 0;
+            padding-top: 0;
+        }
+
+        #close-btn {
+            display: none;
+        }
+
+        .sidebar {
+            padding: 1rem 0;
+            box-shadow: 0 4px 20px rgba(149, 89, 20, 0.05);
+            overflow: hidden;
+        }
+
+            .sidebar a {
+                display: flex;
+                align-items: center;
+                gap: 0.9rem;
+                height: 3.6rem;
+                padding: 1.5rem;
+                color: var(--color-gray-light);
+                position: relative;
+                transition: all 250ms ease;
+            }
+
+                .sidebar a span.material-icons-sharp {
+                    font-size: 1.7rem;
+                    margin-left: 3rem;
+                    transition: all 500ms ease;
+                }
+
+                .sidebar a h4 {
+                    font-size: 0.85rem;
+                    font-weight: 500;
+                    white-space: nowrap;
+                }
+
+                .sidebar a.active {
+                    background: var(--color-white);
+                    color: var(--color-primary);
+                }
+
+                    .sidebar a.active::before {
+                        content: "";
+                        width: 6px;
+                        height: 100%;
+                        position: absolute;
+                        background: var(--color-primary);
+                    }
+
+                .sidebar a:hover {
+                    color: var(--color-primary);
+                }
+
+                    .sidebar a:hover span.material-icons-sharp {
+                        transform: translateX(4px);
+                        margin-left: 2rem;
+                    }
+
+        /* ===== CONTENT ===== */
+        .content {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+            .page-header .icon-box {
+                width: 46px;
+                height: 46px;
+                border-radius: 12px;
+                background: var(--background-color);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--color-primary);
+                font-size: 1.5rem;
+            }
+
+            .page-header h2 {
+                font-weight: 600;
+            }
+
+            .page-header p {
+                font-size: 0.8rem;
+                margin-top: 2px;
+            }
+
+        .card {
+            background: var(--color-white);
+            border-radius: var(--card-border-radius);
+            padding: var(--card-padding);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        /* ===== STATS ROW ===== */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        .stat-card {
+            background: var(--color-white);
+            border-radius: var(--border-radius-1);
+            padding: 1.2rem 1.4rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+            .stat-card .stat-icon {
+                width: 44px;
+                height: 44px;
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.4rem;
+                flex-shrink: 0;
+            }
+
+            .stat-card .stat-info h3 {
+                font-size: 1.3rem;
+                font-weight: 700;
+                line-height: 1.2;
+            }
+
+            .stat-card .stat-info p {
+                font-size: 0.75rem;
+                margin-top: 2px;
+            }
+
+        /* ===== FILTERS BAR ===== */
+        .filters-bar {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--color-light);
+            border-radius: var(--border-radius-2);
+            padding: 0.45rem 0.8rem;
+            font-size: 0.8rem;
+            color: var(--color-gray-dark);
+        }
+
+            .filter-group select,
+            .filter-group input {
+                background: transparent;
+                font-family: "Poppins", sans-serif;
+                font-size: 0.8rem;
+                color: var(--color-dark);
+                cursor: pointer;
+            }
+
+            .filter-group .material-icons-sharp {
+                font-size: 1rem;
+                color: var(--color-gray-light);
+            }
+
+        .search-filter {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--color-light);
+            border-radius: var(--border-radius-2);
+            padding: 0.45rem 0.9rem;
+            flex: 1;
+            min-width: 180px;
+        }
+
+            .search-filter input {
+                background: transparent;
+                width: 100%;
+                font-family: "Poppins", sans-serif;
+                font-size: 0.82rem;
+                color: var(--color-dark);
+            }
+
+                .search-filter input::placeholder {
+                    color: var(--color-gray-light);
+                }
+
+            .search-filter .material-icons-sharp {
+                font-size: 1rem;
+                color: var(--color-gray-light);
+            }
+
+        .btn-export {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.5rem 1rem;
+            background: var(--color-primary);
+            color: white;
+            border-radius: var(--border-radius-2);
+            font-family: "Poppins", sans-serif;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 250ms ease;
+            margin-left: auto;
+        }
+
+            .btn-export:hover {
+                background: #3800c0;
+            }
+
+            .btn-export .material-icons-sharp {
+                font-size: 1rem;
+            }
+
+        /* ===== TABLE ===== */
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead th {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--color-gray-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 0.7rem 1rem;
+            border-bottom: 1.5px solid var(--color-light);
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid var(--color-light);
+            transition: background 200ms ease;
+            cursor: pointer;
+        }
+
+            tbody tr:last-child {
+                border-bottom: none;
+            }
+
+            tbody tr:hover {
+                background: var(--color-light);
+            }
+
+        tbody td {
+            padding: 0.9rem 1rem;
+            font-size: 0.83rem;
+            vertical-align: middle;
+        }
+
+        /* Transaction cell */
+        .tx-cell {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .tx-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .tx-name {
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+
+        .tx-id {
+            font-size: 0.72rem;
+            color: var(--color-gray-light);
+            margin-top: 1px;
+        }
+
+        /* Amount */
+        .amount-out {
+            color: var(--color-danger);
+            font-weight: 600;
+        }
+
+        .amount-in {
+            color: var(--color-success);
+            font-weight: 600;
+        }
+
+        /* Status badge */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.25rem 0.65rem;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+            .badge .dot {
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+            }
+
+            .badge.success {
+                background: var(--color-success-light);
+                color: #0d6e2c;
+            }
+
+                .badge.success .dot {
+                    background: var(--color-success);
+                }
+
+            .badge.pending {
+                background: var(--color-warning-light);
+                color: #7a5c00;
+            }
+
+                .badge.pending .dot {
+                    background: var(--color-warning);
+                }
+
+            .badge.failed {
+                background: var(--color-danger-light);
+                color: #9b1c1c;
+            }
+
+                .badge.failed .dot {
+                    background: var(--color-danger);
+                }
+
+        /* Action btn */
+        .btn-action {
+            background: var(--color-light);
+            border-radius: var(--border-radius-2);
+            padding: 0.3rem 0.6rem;
+            font-size: 1rem;
+            color: var(--color-gray-dark);
+            cursor: pointer;
+            transition: all 200ms ease;
+            display: inline-flex;
+            align-items: center;
+        }
+
+            .btn-action:hover {
+                background: var(--color-primary-light);
+                color: var(--color-primary);
+            }
+
+        /* ===== PAGINATION ===== */
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 1.2rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+            .pagination p {
+                font-size: 0.78rem;
+            }
+
+        .page-btns {
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .page-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--border-radius-2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            background: var(--color-light);
+            color: var(--color-gray-dark);
+            transition: all 200ms ease;
+        }
+
+            .page-btn.active {
+                background: var(--color-primary);
+                color: white;
+            }
+
+            .page-btn:hover:not(.active) {
+                background: var(--color-primary-light);
+                color: var(--color-primary);
+            }
+
+            .page-btn .material-icons-sharp {
+                font-size: 1rem;
+            }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 300;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(3px);
+        }
+
+            .modal-overlay.open {
+                display: flex;
+                animation: fadeIn 200ms ease;
+            }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal {
+            background: var(--color-white);
+            border-radius: var(--card-border-radius);
+            padding: 2rem;
+            width: 420px;
+            max-width: 95vw;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            animation: slideUp 250ms ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+            .modal-header h3 {
+                font-size: 1.1rem;
+                font-weight: 600;
+            }
+
+        .modal-close {
+            background: var(--color-light);
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--color-gray-dark);
+            font-size: 1.1rem;
+            transition: all 200ms ease;
+        }
+
+            .modal-close:hover {
+                background: var(--color-danger-light);
+                color: var(--color-danger);
+            }
+
+        .modal-status-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 1.2rem;
+        }
+
+        .modal-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.6rem 0;
+            border-bottom: 1px dashed var(--color-light);
+        }
+
+            .modal-row:last-child {
+                border: none;
+            }
+
+            .modal-row span:first-child {
+                font-size: 0.8rem;
+                color: var(--color-gray-dark);
+            }
+
+            .modal-row span:last-child {
+                font-size: 0.85rem;
+                font-weight: 500;
+            }
+
+        /* Loading spinner */
+        .spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid var(--color-light);
+            border-top-color: var(--color-primary);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            margin: 0 auto 0.8rem;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1100px) {
+            .stats-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 900px) {
+            main {
+                grid-template-columns: 1fr;
+            }
+
+            aside {
+                position: fixed;
+                left: -100%;
+                top: 0;
+                height: 100vh;
+                width: var(--sidebar-width);
+                z-index: 200;
+                background: var(--color-white);
+                transition: left 300ms ease;
+                box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
+            }
+
+                aside.open {
+                    left: 0;
+                }
+
+            #close-btn {
+                display: flex;
+                margin: 1rem;
+                cursor: pointer;
+                background: none;
+                color: var(--color-dark);
+                font-size: 1.4rem;
+            }
+
+            #menu-btn {
+                display: flex;
+            }
+
+            nav .search-bar {
+                width: 40vw;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .stats-row {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .filters-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn-export {
+                margin-left: 0;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ===== NAVBAR ===== -->
+    <nav>
+        <div class="container">
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <span class="material-icons-sharp">account_balance</span>
+                </div>
+                <div class="logo-text">Winners<span>Bank</span></div>
+            </div>
+
+            <div class="search-bar">
+                <span class="material-icons-sharp">search</span>
+                <input type="search"
+                       placeholder="Search transactions, beneficiaries…" />
+            </div>
+
+            <div class="profile-area">
+                <div class="theme-btn" onclick="toggleTheme()">
+                    <span class="material-icons-sharp active" id="lightIcon">light_mode</span>
+                    <span class="material-icons-sharp" id="darkIcon">dark_mode</span>
+                </div>
+                <div class="profile">
+
+                    <h3 id="username"></h3>
+
+                </div>
+                <button id="menu-btn" onclick="toggleSidebar()">
+                    <span class="material-icons-sharp">menu</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===== MAIN ===== -->
+    <main>
+        <!-- SIDEBAR -->
+        <aside id="sidebar">
+            <button id="close-btn" onclick="toggleSidebar()">
+                <span class="material-icons-sharp">close</span>
+            </button>
+            <div class="sidebar">
+                <a href="index.html">
+                    <span class="material-icons-sharp">dashboard</span>
+                    <h4>Dashboard</h4>
+                </a>
+                <a href="transfer.html">
+                    <span class="material-icons-sharp">send</span>
+                    <h4>Transfer Money</h4>
+                </a>
+                <a href="transfer_his.html" class="active">
+                    <span class="material-icons-sharp">history</span>
+                    <h4>Transfer History</h4>
+                </a>
+                <a href="Beneficiaries.HTML">
+                    <span class="material-icons-sharp">group</span>
+                    <h4>Beneficiaries</h4>
+                </a>
+                <a href="bills.html">
+                    <span class="material-icons-sharp">payment</span>
+                    <h4>Bills Payment</h4>
+                </a>
+                <a href="adminmonitor.html">
+                    <span class="material-icons-sharp">admin_panel_settings</span>
+                    <h4>Admin Panel</h4>
+                </a>
+                <a href="settings.html">
+                    <span class="material-icons-sharp">settings</span>
+                    <h4>Settings & Security</h4>
+                </a>
+                <a href="support.html">
+                    <span class="material-icons-sharp">help_center</span>
+                    <h4>Support</h4>
+                </a>
+                <a href="logout.html" id="logout-link">
+                    <span class="material-icons-sharp">logout</span>
+                    <h4>Logout</h4>
+                </a>
+            </div>
+        </aside>
+
+        <!-- CONTENT -->
+        <div class="content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="icon-box">
+                    <span class="material-icons-sharp">history</span>
+                </div>
+                <div>
+                    <h2>Transfer History</h2>
+                    <p>View and manage all your past transactions</p>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-icon"
+                         style="background: var(--color-primary-light); color: var(--color-primary);">
+                        <span class="material-icons-sharp">receipt_long</span>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="statTotal">—</h3>
+                        <p>Total Transactions</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"
+                         style="background: var(--color-success-light); color: var(--color-success);">
+                        <span class="material-icons-sharp">arrow_upward</span>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="statSent">—</h3>
+                        <p>Total Sent</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"
+                         style="background: var(--color-purple-light); color: var(--color-purple);">
+                        <span class="material-icons-sharp">arrow_downward</span>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="statReceived">—</h3>
+                        <p>Total Received</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"
+                         style="background: var(--color-danger-light); color: var(--color-danger);">
+                        <span class="material-icons-sharp">cancel</span>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="statFailed">—</h3>
+                        <p>Failed Transfers</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table Card -->
+            <div class="card">
+                <!-- Filters -->
+                <div class="filters-bar" style="margin-bottom: 1.2rem">
+                    <div class="search-filter">
+                        <span class="material-icons-sharp">search</span>
+                        <input type="text"
+                               id="searchInput"
+                               placeholder="Search by name or ID…" />
+                    </div>
+
+                    <div class="filter-group">
+                        <span class="material-icons-sharp">filter_list</span>
+                        <select id="statusFilter">
+                            <option value="">All Status</option>
+                            <option value="success">Completed</option>
+                            <option value="pending">Pending</option>
+                            <option value="failed">Failed</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <span class="material-icons-sharp">swap_vert</span>
+                        <select id="typeFilter">
+                            <option value="">All Types</option>
+                            <option value="out">Sent</option>
+                            <option value="in">Received</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <span class="material-icons-sharp">calendar_today</span>
+                        <select id="dateFilter">
+                            <option value="">All Time</option>
+                            <option value="today">Today</option>
+                            <option value="week">This Week</option>
+                            <option value="month">This Month</option>
+                        </select>
+                    </div>
+
+                    <button class="btn-export" onclick="exportCSV()">
+                        <span class="material-icons-sharp">download</span>
+                        Export CSV
+                    </button>
+                </div>
+
+                <!-- Table -->
+                <div class="table-wrapper">
+                    <table id="txTable">
+                        <thead>
+                            <tr>
+                                <th>Transaction</th>
+                                <th>Date &amp; Time</th>
+                                <th>Type</th>
+                                <th>Account</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <tr>
+                                <td colspan="7" style="text-align:center; padding:2.5rem;">
+                                    <div class="spinner"></div>
+                                    <p>Loading transactions…</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination">
+                    <p id="paginationInfo"></p>
+                    <div class="page-btns" id="pageBtns"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ===== MODAL ===== -->
+    <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Transaction Details</h3>
+                <div class="modal-close" onclick="closeModalDirect()">
+                    <span class="material-icons-sharp">close</span>
+                </div>
+            </div>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <script>
+        let allTransactions = [];
+        let currentPage = 1;
+        let filtered = [];
+        const PER_PAGE = 10;
+
+        // ========== AUTH ==========
+        function getToken() { return localStorage.getItem("token"); }
+        function redirectLogin() { localStorage.removeItem("token"); window.location.href = "login.html"; }
+
+        // ========== LOAD USER INFO FOR NAVBAR ==========
+        async function loadUserInfo() {
+            const token = getToken();
+            if (!token) { redirectLogin(); return; }
+            try {
+                const res = await fetch("/api/Auth/me", {
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+                if (res.ok) {
+                    const user = await res.json();
+                    const name = user.username || user.email || "User";
+                    document.getElementById("navName").textContent = name;
+                    document.getElementById("navInitials").textContent = name.slice(0, 2).toUpperCase();
+                }
+            } catch (_) { }
+        }
+
+        // ========== FETCH REAL DATA FROM API ==========
+        async function loadTransactions() {
+            const token = getToken();
+            if (!token) { redirectLogin(); return; }
+
+            try {
+                const response = await fetch("/api/Banking/transactions", {
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+
+                if (response.status === 401) { redirectLogin(); return; }
+
+                const data = await response.json();
+
+                // Map API status string to badge class
+                const statusMap = {
+                    "completed": "success",
+                    "success": "success",
+                    "pending": "pending",
+                    "failed": "failed"
+                };
+
+                allTransactions = data.map(tx => {
+                    const isOut = tx.type === "Transfer" || tx.type === "BillPayment";
+                    return {
+                        id: tx.id,
+                        referenceNumber: tx.referenceNumber || `TXN${tx.id}`,
+                        type: isOut ? "out" : "in",
+                        amount: tx.amount,
+                        status: statusMap[tx.status?.toLowerCase()] || "pending",
+                        description: tx.description,
+                        toAccountNumber: tx.toAccountNumber,
+                        date: new Date(tx.createdAt).toLocaleString(),
+                        createdAt: new Date(tx.createdAt)
+                    };
+                });
+
+                filtered = [...allTransactions];
+                updateStats();
+                filterTable();
+
+            } catch (error) {
+                console.error("Error loading transactions:", error);
+                document.getElementById("tableBody").innerHTML = `
+                <tr><td colspan="7" style="text-align:center; padding:2rem; color:var(--color-danger);">
+                  ❌ Failed to load transactions. Please try again.
+                </td></tr>`;
+            }
+        }
+
+        // ========== UPDATE STATS ==========
+        function updateStats() {
+            const total = allTransactions.length;
+            const totalSent = allTransactions
+                .filter(tx => tx.type === "out")
+                .reduce((sum, tx) => sum + tx.amount, 0);
+            const totalReceived = allTransactions
+                .filter(tx => tx.type === "in")
+                .reduce((sum, tx) => sum + tx.amount, 0);
+            const failedCount = allTransactions.filter(tx => tx.status === "failed").length;
+
+            document.getElementById("statTotal").textContent = total;
+            document.getElementById("statSent").textContent = `EGP ${totalSent.toLocaleString()}`;
+            document.getElementById("statReceived").textContent = `EGP ${totalReceived.toLocaleString()}`;
+            document.getElementById("statFailed").textContent = failedCount;
+        }
+
+        // ========== FILTER LOGIC ==========
+        function filterTable() {
+            const search = document.getElementById("searchInput").value.toLowerCase();
+            const status = document.getElementById("statusFilter").value;
+            const type = document.getElementById("typeFilter").value;
+            const dateFilter = document.getElementById("dateFilter").value;
+
+            filtered = allTransactions.filter(tx => {
+                const matchSearch =
+                    (tx.referenceNumber?.toLowerCase().includes(search) || false) ||
+                    (tx.description?.toLowerCase().includes(search) || false) ||
+                    (tx.toAccountNumber?.includes(search) || false);
+
+                const matchStatus = !status || tx.status === status;
+                const matchType = !type || tx.type === type;
+
+                let matchDate = true;
+                const now = new Date();
+                if (dateFilter === "today") {
+                    matchDate = tx.createdAt.toDateString() === now.toDateString();
+                } else if (dateFilter === "week") {
+                    const weekAgo = new Date(); weekAgo.setDate(weekAgo.getDate() - 7);
+                    matchDate = tx.createdAt >= weekAgo;
+                } else if (dateFilter === "month") {
+                    const monthAgo = new Date(); monthAgo.setMonth(monthAgo.getMonth() - 1);
+                    matchDate = tx.createdAt >= monthAgo;
+                }
+
+                return matchSearch && matchStatus && matchType && matchDate;
+            });
+
+            currentPage = 1;
+            renderTable();
+        }
+
+        // ========== RENDER TABLE ==========
+        function renderTable() {
+            const start = (currentPage - 1) * PER_PAGE;
+            const page = filtered.slice(start, start + PER_PAGE);
+            const tbody = document.getElementById("tableBody");
+
+            if (page.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:2rem; color:var(--color-gray-light);">
+                No transactions found.
+              </td></tr>`;
+                document.getElementById("paginationInfo").textContent = "Showing 0 of 0 transactions";
+                renderPagination();
+                return;
+            }
+
+            tbody.innerHTML = page.map(tx => `
+              <tr onclick="openModal(${tx.id})">
+                <td>
+                  <div class="tx-cell">
+                    <div class="tx-icon" style="background: var(--color-${tx.type === 'out' ? 'danger' : 'success'}-light); color: var(--color-${tx.type === 'out' ? 'danger' : 'success'});">
+                      <span class="material-icons-sharp" style="font-size:1.1rem;">
+                        ${tx.type === "out" ? "arrow_upward" : "arrow_downward"}
+                      </span>
+                    </div>
+                    <div>
+                      <div class="tx-name">${tx.description || (tx.type === "out" ? "Transfer Sent" : "Transfer Received")}</div>
+                      <div class="tx-id">${tx.referenceNumber}</div>
+                    </div>
+                  </div>
+                </td>
+                <td style="color:var(--color-gray-dark); white-space:nowrap;">${tx.date}</td>
+                <td>
+                  <span style="display:inline-flex;align-items:center;gap:0.3rem;font-size:0.8rem;font-weight:500;
+                    color:${tx.type === "out" ? "var(--color-danger)" : "var(--color-success)"}">
+                    <span class="material-icons-sharp" style="font-size:1rem;">
+                      ${tx.type === "out" ? "arrow_upward" : "arrow_downward"}
+                    </span>
+                    ${tx.type === "out" ? "Sent" : "Received"}
+                  </span>
+                </td>
+                <td style="font-size:0.82rem;">${tx.toAccountNumber ? "****" + tx.toAccountNumber.slice(-4) : "—"}</td>
+                <td class="${tx.type === "out" ? "amount-out" : "amount-in"}">
+                  ${tx.type === "out" ? "−" : "+"}EGP ${tx.amount.toLocaleString()}
+                </td>
+                <td>
+                  <span class="badge ${tx.status}">
+                    <span class="dot"></span>
+                    ${tx.status === "success" ? "Completed" : tx.status.charAt(0).toUpperCase() + tx.status.slice(1)}
+                  </span>
+                </td>
+                <td>
+                  <button class="btn-action" onclick="event.stopPropagation(); openModal(${tx.id})">
+                    <span class="material-icons-sharp">open_in_new</span>
+                  </button>
+                </td>
+              </tr>
+            `).join("");
+
+            const total = filtered.length;
+            const from = total === 0 ? 0 : start + 1;
+            const to = Math.min(start + PER_PAGE, total);
+            document.getElementById("paginationInfo").textContent =
+                `Showing ${from}–${to} of ${total} transaction${total !== 1 ? "s" : ""}`;
+            renderPagination();
+        }
+
+        // ========== PAGINATION ==========
+        function renderPagination() {
+            const totalPages = Math.ceil(filtered.length / PER_PAGE);
+            const container = document.getElementById("pageBtns");
+            container.innerHTML = "";
+
+            const prev = document.createElement("div");
+            prev.className = "page-btn";
+            prev.innerHTML = '<span class="material-icons-sharp">chevron_left</span>';
+            prev.onclick = () => { if (currentPage > 1) { currentPage--; renderTable(); } };
+            container.appendChild(prev);
+
+            for (let i = 1; i <= totalPages; i++) {
+                const btn = document.createElement("div");
+                btn.className = "page-btn" + (i === currentPage ? " active" : "");
+                btn.textContent = i;
+                btn.onclick = () => { currentPage = i; renderTable(); };
+                container.appendChild(btn);
+            }
+
+            const next = document.createElement("div");
+            next.className = "page-btn";
+            next.innerHTML = '<span class="material-icons-sharp">chevron_right</span>';
+            next.onclick = () => { if (currentPage < totalPages) { currentPage++; renderTable(); } };
+            container.appendChild(next);
+        }
+
+        // ========== MODAL ==========
+        function openModal(txId) {
+            const tx = allTransactions.find(t => t.id === txId);
+            if (!tx) return;
+
+            const iconColor = tx.status === "success" ? "var(--color-success)" :
+                tx.status === "pending" ? "var(--color-warning)" : "var(--color-danger)";
+            const iconName = tx.status === "success" ? "check_circle" :
+                tx.status === "pending" ? "schedule" : "cancel";
+
+            document.getElementById("modalContent").innerHTML = `
+              <div class="modal-status-icon" style="background:${iconColor}20; color:${iconColor};">
+                <span class="material-icons-sharp" style="font-size:2rem;">${iconName}</span>
+              </div>
+              <div style="text-align:center; margin-bottom:1.5rem;">
+                <h3 style="font-size:1.3rem; font-weight:700;">
+                  ${tx.type === "out" ? "−" : "+"}EGP ${tx.amount.toLocaleString()}
+                </h3>
+                <p style="margin-top:4px;">${tx.type === "out" ? "Sent to" : "Received from"} ${tx.toAccountNumber || "—"}</p>
+              </div>
+              <div>
+                <div class="modal-row"><span>Transaction ID</span><span style="font-family:monospace;">${tx.referenceNumber}</span></div>
+                <div class="modal-row"><span>Date &amp; Time</span><span>${tx.date}</span></div>
+                <div class="modal-row"><span>Type</span><span>${tx.type === "out" ? "Sent" : "Received"}</span></div>
+                <div class="modal-row"><span>Description</span><span>${tx.description || "—"}</span></div>
+                <div class="modal-row"><span>Status</span>
+                  <span class="badge ${tx.status}">
+                    <span class="dot"></span>
+                    ${tx.status === "success" ? "Completed" : tx.status.charAt(0).toUpperCase() + tx.status.slice(1)}
+                  </span>
+                </div>
+              </div>
+            `;
+            document.getElementById("modalOverlay").classList.add("open");
+        }
+
+        function closeModal(e) { if (e.target === document.getElementById("modalOverlay")) closeModalDirect(); }
+        function closeModalDirect() { document.getElementById("modalOverlay").classList.remove("open"); }
+
+        // ========== EXPORT CSV ==========
+        function exportCSV() {
+            const headers = ["ID", "Type", "Amount (EGP)", "Status", "Description", "Date"];
+            const rows = filtered.map(tx => [
+                tx.referenceNumber,
+                tx.type === "out" ? "Sent" : "Received",
+                tx.amount,
+                tx.status === "success" ? "Completed" : tx.status,
+                `"${(tx.description || "").replace(/"/g, '""')}"`,
+                tx.date
+            ]);
+            const csv = [headers, ...rows].map(r => r.join(",")).join("\n");
+            const blob = new Blob([csv], { type: "text/csv" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "transfer-history.csv";
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // ========== THEME & SIDEBAR ==========
+        function toggleTheme() {
+            document.body.classList.toggle("dark-theme");
+            const light = !document.body.classList.contains("dark-theme");
+            document.getElementById("lightIcon")?.classList.toggle("active", light);
+            document.getElementById("darkIcon")?.classList.toggle("active", !light);
+        }
+
+        function toggleSidebar() {
+            document.getElementById("sidebar").classList.toggle("open");
+        }
+
+        // ========== INIT ==========
+        document.getElementById("searchInput").addEventListener("input", filterTable);
+        document.getElementById("statusFilter").addEventListener("change", filterTable);
+        document.getElementById("typeFilter").addEventListener("change", filterTable);
+        document.getElementById("dateFilter").addEventListener("change", filterTable);
+
+        loadUserInfo();
+        loadTransactions();
+    </script>
+    <script>
+        const username = localStorage.getItem("fullName");
+
+        if (username) {
+            document.getElementById("username").innerText = username;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,869 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bills Payment · Winners Bank</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+        :root {
+            --color-white: #ffffff;
+            --color-light: #f0eff5;
+            --color-gray-light: #86848c;
+            --color-gray-dark: #56555e;
+            --color-dark: #27282f;
+            --color-primary: #24086d;
+            --color-primary-light: rgba(204,153,76,0.607);
+            --color-success: #22ca4b;
+            --color-success-light: rgba(34,202,75,0.2);
+            --color-danger: #ff4336;
+            --color-danger-light: rgba(255,67,54,0.2);
+            --color-purple: rgb(160,99,245);
+            --color-purple-light: rgba(160,99,245,0.2);
+            --card-border-radius: 1.6rem;
+            --border-radius-1: 1rem;
+            --border-radius-2: 6px;
+            --card-padding: 1.6rem;
+            --sidebar-width: 220px;
+        }
+
+        .dark-theme {
+            --color-white: #131315;
+            --color-light: #23232a;
+            --color-dark: #ddd;
+            --color-gray-dark: #adacb5;
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            outline: 0;
+            border: 0;
+            appearance: none;
+            text-decoration: none;
+            list-style: none;
+        }
+
+        html {
+            font-size: 13px;
+        }
+
+        body {
+            font-family: "Poppins", sans-serif;
+            background: var(--color-light);
+            color: var(--color-dark);
+            min-height: 100vh;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+        }
+
+        h4 {
+            font-size: 0.95rem;
+        }
+
+        h5 {
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        p {
+            font-size: 0.85rem;
+            color: var(--color-gray-dark);
+        }
+
+        nav {
+            width: 100%;
+            background: var(--color-white);
+            padding: 0.8rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+
+            nav .container {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 96%;
+                margin: 0 auto;
+            }
+
+            nav .logo-area {
+                display: flex;
+                align-items: center;
+                gap: 0.6rem;
+            }
+
+            nav .logo-icon {
+                width: 38px;
+                height: 38px;
+                background: var(--color-primary);
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-size: 1.4rem;
+            }
+
+            nav .logo-text {
+                font-size: 1.1rem;
+                font-weight: 700;
+                color: var(--color-primary);
+            }
+
+                nav .logo-text span {
+                    color: var(--color-primary-light);
+                }
+
+
+            nav .search-bar {
+                background: var(--color-light);
+                padding: 0.5rem 1rem;
+                width: 30vw;
+                border-radius: var(--border-radius-2);
+                display: flex;
+                align-items: center;
+                gap: 0.8rem;
+                color: var(--color-gray-light);
+                position: relative;
+            }
+
+                nav .search-bar input {
+                    background: transparent;
+                    width: 100%;
+                    font-family: "Poppins", sans-serif;
+                    font-size: 0.85rem;
+                    color: var(--color-dark);
+                }
+            nav .profile-area {
+                display: flex;
+                align-items: center;
+                gap: 1.5rem;
+            }
+
+                    nav .search-bar input::placeholder {
+                        color: var(--color-gray-light);
+                    }
+
+           
+
+            nav .theme-btn {
+                display: flex;
+                background: var(--color-light);
+                border-radius: var(--border-radius-2);
+                overflow: hidden;
+                cursor: pointer;
+            }
+
+                nav .theme-btn span {
+                    padding: 0.4rem 0.6rem;
+                    font-size: 1.2rem;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: var(--color-gray-light);
+                    transition: all 200ms ease;
+                }
+
+                    nav .theme-btn span.active {
+                        background: var(--color-dark);
+                        color: var(--color-white);
+                        border-radius: var(--border-radius-2);
+                    }
+
+            
+
+            
+        #menu-btn {
+            display: none;
+            background: transparent;
+            cursor: pointer;
+            color: var(--color-dark);
+            font-size: 1.5rem;
+        }
+
+        main {
+            display: grid;
+            grid-template-columns: var(--sidebar-width) 1fr;
+            gap: 2rem;
+            width: 96%;
+            margin: 1rem auto 4rem;
+        }
+
+        aside {
+            display: flex;
+            flex-direction: column;
+            height: 88vh;
+            position: sticky;
+            top: 1rem;
+        }
+
+        #close-btn {
+            display: none;
+        }
+
+        .sidebar {
+            padding: 1rem 0;
+            box-shadow: 0 4px 20px rgba(149,89,20,0.05);
+        }
+
+            .sidebar a {
+                display: flex;
+                align-items: center;
+                gap: 0.9rem;
+                height: 3.6rem;
+                padding: 1.5rem;
+                color: var(--color-gray-light);
+                position: relative;
+                transition: all 250ms ease;
+            }
+
+                .sidebar a span.material-icons-sharp {
+                    font-size: 1.7rem;
+                    margin-left: 3rem;
+                    transition: all 500ms ease;
+                }
+
+                .sidebar a h4 {
+                    font-size: 0.85rem;
+                    font-weight: 500;
+                    white-space: nowrap;
+                }
+
+                .sidebar a.active {
+                    background: var(--color-white);
+                    color: var(--color-primary);
+                }
+
+                    .sidebar a.active::before {
+                        content: "";
+                        width: 6px;
+                        height: 100%;
+                        position: absolute;
+                        background: var(--color-primary);
+                    }
+
+                .sidebar a:hover {
+                    color: var(--color-primary);
+                }
+
+                    .sidebar a:hover span.material-icons-sharp {
+                        transform: translateX(4px);
+                        margin-left: 2rem;
+                    }
+
+        .bills-container {
+            background: var(--color-white);
+            border-radius: 2.5rem;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+
+        .biller-grid {
+            display: grid;
+            grid-template-columns: repeat(6,1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .biller-icon {
+            background: var(--color-light);
+            border-radius: 24px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+            .biller-icon span {
+                font-size: 2rem;
+                color: var(--color-primary);
+            }
+
+            .biller-icon.active {
+                background: var(--color-primary);
+                color: white;
+            }
+
+                .biller-icon.active span {
+                    color: white;
+                }
+
+        .biller-label {
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+            color: var(--color-gray-dark);
+        }
+
+        .biller-icon.active .biller-label {
+            color: white;
+        }
+
+        .form-control {
+            background: var(--color-light);
+            border: 1.5px solid transparent;
+            border-radius: 20px;
+            padding: 14px 18px;
+            width: 100%;
+            color: var(--color-dark);
+            font-family: "Poppins", sans-serif;
+            font-size: 0.85rem;
+            transition: border-color 200ms;
+        }
+
+            .form-control:focus {
+                border-color: var(--color-primary);
+                outline: none;
+            }
+
+        .btn-pay {
+            background: var(--color-primary);
+            color: white;
+            border-radius: 60px;
+            padding: 16px 24px;
+            font-weight: 600;
+            font-family: "Poppins", sans-serif;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+        }
+
+            .btn-pay:hover {
+                background: #170346;
+                transform: translateY(-2px);
+            }
+
+            .btn-pay:disabled {
+                opacity: 0.7;
+                cursor: not-allowed;
+                transform: none;
+            }
+
+        .balance-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: var(--color-success-light);
+            color: #0d6e2c;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .alert-success {
+            display: none;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 1rem 1.2rem;
+            background: var(--color-success-light);
+            border-radius: var(--border-radius-1);
+            border-left: 4px solid var(--color-success);
+            margin-top: 1rem;
+        }
+
+            .alert-success.show {
+                display: flex;
+            }
+
+            .alert-success .material-icons-sharp {
+                color: var(--color-success);
+            }
+
+            .alert-success p {
+                color: #0d6e2c;
+            }
+
+        .alert-danger {
+            display: none;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 1rem 1.2rem;
+            background: var(--color-danger-light);
+            border-radius: var(--border-radius-1);
+            border-left: 4px solid var(--color-danger);
+            margin-top: 1rem;
+        }
+
+            .alert-danger.show {
+                display: flex;
+            }
+
+            .alert-danger .material-icons-sharp {
+                color: var(--color-danger);
+            }
+
+            .alert-danger p {
+                color: var(--color-danger);
+            }
+
+        .recent-item {
+            background: var(--color-light);
+            border-radius: 20px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Search dropdown */
+        .search-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            z-index: 1000;
+            display: none;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .search-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+            border-bottom: 1px solid #eee;
+            font-size: 0.85rem;
+        }
+
+            .search-item:hover {
+                background: #f0eff5;
+            }
+
+        hr {
+            border: none;
+            border-top: 1px solid var(--color-light);
+            margin: 2rem 0;
+        }
+
+        @media (max-width: 992px) {
+            main {
+                grid-template-columns: 1fr;
+            }
+
+            aside {
+                position: fixed;
+                left: -100%;
+                top: 0;
+                height: 100vh;
+                width: var(--sidebar-width);
+                z-index: 200;
+                background: var(--color-white);
+                transition: left 300ms ease;
+            }
+
+                aside.open {
+                    left: 0;
+                }
+
+            #close-btn {
+                display: flex;
+                margin: 1rem;
+                cursor: pointer;
+                background: none;
+                color: var(--color-dark);
+                font-size: 1.4rem;
+            }
+
+            #menu-btn {
+                display: flex;
+            }
+
+            .biller-grid {
+                grid-template-columns: repeat(3,1fr);
+            }
+        }
+
+        @media (max-width: 576px) {
+            .biller-grid {
+                grid-template-columns: repeat(2,1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <div class="logo-area">
+                <div class="logo-icon"><span class="material-icons-sharp">account_balance</span></div>
+                <div class="logo-text">Winners<span>Bank</span></div>
+            </div>
+            <div class="search-bar">
+                <span class="material-icons-sharp">search</span>
+                <input type="search" id="navSearchInput" placeholder="Search…" />
+                <div class="search-dropdown" id="searchDropdown"></div>
+            </div>
+            <div class="profile-area">
+                <div class="theme-btn" onclick="toggleTheme()">
+                    <span class="material-icons-sharp active" id="lightIcon">light_mode</span>
+                    <span class="material-icons-sharp" id="darkIcon">dark_mode</span>
+                </div>
+                <div class="profile">
+                    
+                    <h3 id="username"></h3>
+                   
+                </div>
+                <button id="menu-btn" onclick="toggleSidebar()"><span class="material-icons-sharp">menu</span></button>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <aside id="sidebar">
+            <button id="close-btn" onclick="toggleSidebar()"><span class="material-icons-sharp">close</span></button>
+            <div class="sidebar">
+                <a href="index.html"><span class="material-icons-sharp">dashboard</span><h4>Dashboard</h4></a>
+                <a href="transfer.html"><span class="material-icons-sharp">send</span><h4>Transfer Money</h4></a>
+                <a href="transfer_his.html"><span class="material-icons-sharp">history</span><h4>Transfer History</h4></a>
+                <a href="Beneficiaries.HTML"><span class="material-icons-sharp">group</span><h4>Beneficiaries</h4></a>
+                <a href="bills.html" class="active"><span class="material-icons-sharp">payment</span><h4>Bills Payment</h4></a>
+                <a href="adminmonitor.html"><span class="material-icons-sharp">admin_panel_settings</span><h4>Admin Panel</h4></a>
+                <a href="settings.html"><span class="material-icons-sharp">settings</span><h4>Settings & Security</h4></a>
+                <a href="support.html"><span class="material-icons-sharp">help_center</span><h4>Support</h4></a>
+                <a href="logout.html"><span class="material-icons-sharp">logout</span><h4>Logout</h4></a>
+            </div>
+        </aside>
+
+        <div class="bills-container">
+            <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;">
+                <span class="material-icons-sharp" style="font-size:3rem;color:var(--color-primary);">receipt</span>
+                <div>
+                    <h2 style="color:var(--color-dark);">Bills Payment</h2>
+                    <p>Instant & secure – pay any bill in seconds</p>
+                </div>
+            </div>
+
+            <!-- Balance Badge -->
+            <div class="balance-badge">
+                <span class="material-icons-sharp" style="font-size:1rem;">account_balance_wallet</span>
+                Available Balance: <span id="availableBalance">Loading...</span>
+            </div>
+
+            <!-- Biller Selection -->
+            <div style="margin-bottom:2rem;">
+                <h4 style="color:var(--color-dark);margin-bottom:1rem;">1. Choose biller</h4>
+                <div class="biller-grid">
+                    <div class="biller-icon active" data-biller="Electricity">
+                        <span class="material-icons-sharp">bolt</span>
+                        <div class="biller-label">Electricity</div>
+                    </div>
+                    <div class="biller-icon" data-biller="Water">
+                        <span class="material-icons-sharp">water_drop</span>
+                        <div class="biller-label">Water</div>
+                    </div>
+                    <div class="biller-icon" data-biller="Internet">
+                        <span class="material-icons-sharp">wifi</span>
+                        <div class="biller-label">Internet</div>
+                    </div>
+                    <div class="biller-icon" data-biller="Gas">
+                        <span class="material-icons-sharp">local_fire_department</span>
+                        <div class="biller-label">Gas</div>
+                    </div>
+                    <div class="biller-icon" data-biller="Phone">
+                        <span class="material-icons-sharp">smartphone</span>
+                        <div class="biller-label">Phone</div>
+                    </div>
+                    <div class="biller-icon" data-biller="TV">
+                        <span class="material-icons-sharp">live_tv</span>
+                        <div class="biller-label">TV / Streaming</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Form -->
+            <h4 style="color:var(--color-dark);margin-bottom:1rem;">2. Payment details</h4>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+                <div style="grid-column:span 2;">
+                    <label style="font-weight:600;display:block;margin-bottom:0.5rem;">Bill Number / Reference</label>
+                    <input type="text" class="form-control" id="billNumber" placeholder="Enter bill number" required />
+                </div>
+                <div style="grid-column:span 2;">
+                    <label style="font-weight:600;display:block;margin-bottom:0.5rem;">Amount (EGP)</label>
+                    <input type="number" class="form-control" id="amountInput" placeholder="0.00" min="1" step="0.01" required />
+                </div>
+            </div>
+
+            <button class="btn-pay" id="payBtn" onclick="payBill()">
+                <span class="material-icons-sharp" style="vertical-align:middle;font-size:1rem;">payment</span>
+                Pay Bill
+            </button>
+
+            <p style="text-align:center;margin-top:1rem;color:var(--color-gray-light);">
+                <span class="material-icons-sharp" style="font-size:1rem;vertical-align:middle;">check_circle</span>
+                You'll receive instant confirmation
+            </p>
+
+            <!-- Alerts -->
+            <div class="alert-success" id="successAlert">
+                <span class="material-icons-sharp">check_circle</span>
+                <p id="successMsg">Bill paid successfully.</p>
+            </div>
+            <div class="alert-danger" id="errorAlert">
+                <span class="material-icons-sharp">error_outline</span>
+                <p id="errorMsg">Something went wrong.</p>
+            </div>
+
+            <hr />
+
+            <!-- Recent Bills from API -->
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+                <h4 style="color:var(--color-dark);">
+                    <span class="material-icons-sharp" style="vertical-align:middle;">history</span>
+                    Recent Bill Payments
+                </h4>
+            </div>
+            <div id="recentBills">
+                <p style="color:var(--color-gray-light);font-size:0.8rem;">Loading...</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+      // ========== AUTH ==========
+      const token = localStorage.getItem("token");
+      if (!token) window.location.href = "login.html";
+
+      const authHeaders = {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      };
+
+      let selectedBiller = "Electricity";
+
+      // ========== BILLER SELECTION ==========
+      document.querySelectorAll(".biller-icon").forEach(icon => {
+        icon.addEventListener("click", function () {
+          document.querySelectorAll(".biller-icon").forEach(i => i.classList.remove("active"));
+          this.classList.add("active");
+          selectedBiller = this.getAttribute("data-biller");
+        });
+      });
+
+      // ========== LOAD USER INFO FROM API ==========
+      async function loadUserInfo() {
+        try {
+          const res = await fetch("/api/Auth/me", { headers: authHeaders });
+          if (res.status === 401) { localStorage.removeItem("token"); window.location.href = "login.html"; return; }
+          if (!res.ok) return;
+          const user = await res.json();
+          const name = user.username || user.email || "User";
+          document.getElementById("profileName").textContent = name;
+          document.getElementById("profileInitials").textContent = name.slice(0, 2).toUpperCase();
+        } catch (err) { console.error(err); }
+      }
+
+      // ========== LOAD BALANCE ==========
+      async function loadBalance() {
+        try {
+          const res = await fetch("/api/Banking/balance", { headers: authHeaders });
+          if (res.status === 401) { localStorage.removeItem("token"); window.location.href = "login.html"; return; }
+          if (!res.ok) return;
+          const data = await res.json();
+          document.getElementById("availableBalance").textContent = `EGP ${data.balance.toLocaleString()}`;
+        } catch (err) { console.error(err); }
+      }
+
+      // ========== LOAD RECENT BILL PAYMENTS ==========
+      async function loadRecentBills() {
+        try {
+          const res = await fetch("/api/Banking/transactions", { headers: authHeaders });
+          if (!res.ok) return;
+          const data = await res.json();
+
+          // Filter only BillPayment type, take last 5
+          const bills = data
+            .filter(t => t.type === "BillPayment")
+            .slice(0, 5);
+
+          const container = document.getElementById("recentBills");
+
+          if (bills.length === 0) {
+            container.innerHTML = `<p style="color:var(--color-gray-light);font-size:0.8rem;text-align:center;padding:1rem 0;">No bill payments yet.</p>`;
+            return;
+          }
+
+          const billerIcons = {
+            Electricity: "bolt",
+            Water:       "water_drop",
+            Internet:    "wifi",
+            Gas:         "local_fire_department",
+            Phone:       "smartphone",
+            TV:          "live_tv"
+          };
+
+          container.innerHTML = bills.map(bill => {
+            const date = new Date(bill.createdAt).toLocaleDateString("en-GB", {
+              day: "2-digit", month: "short", year: "numeric"
+            });
+            // Extract biller type from description: "Pay Electricity bill - ELEC123"
+            const descParts = (bill.description || "").split(" ");
+            const billerType = descParts[1] || "Bill";
+            const icon = billerIcons[billerType] || "payment";
+            const ref = bill.referenceNumber || `#${bill.id}`;
+
+            return `
+              <div class="recent-item">
+                <span class="material-icons-sharp" style="font-size:1.6rem;color:var(--color-primary);">${icon}</span>
+                <div style="flex:1;">
+                  <strong style="font-size:0.88rem;">${bill.description || "Bill Payment"}</strong><br/>
+                  <small style="color:var(--color-gray-light);">${date} · ${ref}</small>
+                </div>
+                <strong style="color:var(--color-danger);white-space:nowrap;">−EGP ${bill.amount.toLocaleString()}</strong>
+              </div>
+            `;
+          }).join("");
+
+        } catch (err) { console.error(err); }
+      }
+
+      // ========== PAY BILL ==========
+      async function payBill() {
+        const billNumber = document.getElementById("billNumber").value.trim();
+        const amount     = parseFloat(document.getElementById("amountInput").value);
+
+        // Hide previous alerts
+        document.getElementById("successAlert").classList.remove("show");
+        document.getElementById("errorAlert").classList.remove("show");
+
+        // Validate
+        if (!billNumber) {
+          document.getElementById("errorMsg").textContent = "Please enter a bill number.";
+          document.getElementById("errorAlert").classList.add("show");
+          return;
+        }
+        if (!amount || amount <= 0) {
+          document.getElementById("errorMsg").textContent = "Please enter a valid amount greater than 0.";
+          document.getElementById("errorAlert").classList.add("show");
+          return;
+        }
+
+        const btn = document.getElementById("payBtn");
+        btn.disabled = true;
+        btn.innerHTML = '<span class="material-icons-sharp" style="vertical-align:middle;font-size:1rem;animation:spin 0.7s linear infinite;display:inline-block;">autorenew</span> Processing...';
+
+        try {
+          const res = await fetch("/api/Banking/pay-bill", {
+            method: "POST",
+            headers: authHeaders,
+            body: JSON.stringify({
+              billType:   selectedBiller,
+              billNumber: billNumber,
+              amount:     amount
+            })
+          });
+
+          const data = await res.json().catch(() => ({}));
+
+          if (res.ok) {
+            document.getElementById("successMsg").textContent =
+              `${selectedBiller} bill paid successfully! Amount: EGP ${amount.toFixed(2)}`;
+            document.getElementById("successAlert").classList.add("show");
+            document.getElementById("billNumber").value  = "";
+            document.getElementById("amountInput").value = "";
+            // Refresh balance and recent list
+            loadBalance();
+            loadRecentBills();
+          } else {
+            document.getElementById("errorMsg").textContent =
+              data.message || "Payment failed. Please check your balance and try again.";
+            document.getElementById("errorAlert").classList.add("show");
+          }
+        } catch (err) {
+          document.getElementById("errorMsg").textContent = "Network error. Please try again.";
+          document.getElementById("errorAlert").classList.add("show");
+        } finally {
+          btn.disabled = false;
+          btn.innerHTML = '<span class="material-icons-sharp" style="vertical-align:middle;font-size:1rem;">payment</span> Pay Bill';
+        }
+      }
+
+      // ========== NAVBAR SEARCH ==========
+      const navSearchInput = document.getElementById("navSearchInput");
+      const searchDropdown = document.getElementById("searchDropdown");
+
+      const searchItems = [
+        { name: "Dashboard",           icon: "dashboard",            url: "index.html" },
+        { name: "Transfer Money",      icon: "send",                 url: "transfer.html" },
+        { name: "Transfer History",    icon: "history",              url: "transfer_his.html" },
+        { name: "Beneficiaries",       icon: "group",                url: "Beneficiaries.HTML" },
+        { name: "Bills Payment",       icon: "payment",              url: "bills.html" },
+        { name: "Admin Panel",         icon: "admin_panel_settings", url: "adminmonitor.html" },
+        { name: "Settings & Security", icon: "settings",             url: "settings.html" },
+        { name: "Support",             icon: "help_center",          url: "support.html" },
+        { name: "Logout",              icon: "logout",               url: "logout.html" }
+      ];
+
+      navSearchInput.addEventListener("input", function () {
+        const term = this.value.toLowerCase().trim();
+        if (!term) { searchDropdown.style.display = "none"; return; }
+
+        const filtered = searchItems.filter(i => i.name.toLowerCase().includes(term));
+        if (!filtered.length) {
+          searchDropdown.innerHTML = `<div style="padding:12px;color:#888;font-size:0.82rem;">No results found</div>`;
+        } else {
+          searchDropdown.innerHTML = filtered.map(i => `
+            <div class="search-item" data-url="${i.url}">
+              <span class="material-icons-sharp" style="color:#24086d;font-size:1.1rem;">${i.icon}</span>
+              <span>${i.name}</span>
+            </div>`).join("");
+          document.querySelectorAll(".search-item").forEach(el => {
+            el.onclick = () => window.location.href = el.dataset.url;
+          });
+        }
+        searchDropdown.style.display = "block";
+      });
+
+      document.addEventListener("click", e => {
+        if (!document.querySelector(".search-bar").contains(e.target))
+          searchDropdown.style.display = "none";
+      });
+
+      // ========== THEME & SIDEBAR ==========
+      function toggleTheme() {
+        document.body.classList.toggle("dark-theme");
+        const light = !document.body.classList.contains("dark-theme");
+        document.getElementById("lightIcon").classList.toggle("active", light);
+        document.getElementById("darkIcon").classList.toggle("active", !light);
+      }
+
+      function toggleSidebar() {
+        document.getElementById("sidebar").classList.toggle("open");
+      }
+
+      // ========== SPINNER CSS ==========
+      const style = document.createElement("style");
+      style.textContent = `@keyframes spin { to { transform: rotate(360deg); } }`;
+      document.head.appendChild(style);
+
+      // ========== INIT ==========
+      loadUserInfo();
+      loadBalance();
+      loadRecentBills();
+    </script>
+    <script>
+    const username = localStorage.getItem("fullName");
+
+    if (username) {
+        document.getElementById("username").innerText = username;
+    }
+</script>
+</body>
+</html>

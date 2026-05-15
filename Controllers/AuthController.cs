@@ -16,12 +16,14 @@ namespace WebApplication1.Controllers
         private readonly AppDbContext _context;
         private readonly JwtService _jwtService;
         private readonly PasswordService _passwordService;
+        private readonly BankingService _bankingService;
 
-        public AuthController(AppDbContext context, JwtService jwtService, PasswordService passwordService)
+        public AuthController(AppDbContext context, JwtService jwtService, PasswordService passwordService, BankingService bankingService)
         {
             _context = context;
             _jwtService = jwtService;
             _passwordService = passwordService;
+            _bankingService = bankingService;
         }
 
         // US-01 Registration
@@ -32,7 +34,10 @@ namespace WebApplication1.Controllers
                 return BadRequest("Password must be 8+ chars, with uppercase, lowercase, number and special character");
 
             if (await _context.Users.AnyAsync(u => u.Email == request.Email))
-                return BadRequest("Email already exists");
+                return BadRequest(new
+                {
+                    message = "Email already exists"
+                });
 
             if (await _context.Users.AnyAsync(u => u.Username == request.Username))
                 return BadRequest("Username already exists");
@@ -42,6 +47,14 @@ namespace WebApplication1.Controllers
                 Username = request.Username,
                 Email = request.Email,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
+
+                PhoneNumber = request.PhoneNumber,
+                NationalId = request.NationalId,
+                Address = request.Address,
+
+                DateOfBirth = request.DateOfBirth,
+                AccountType = request.AccountType,
+
                 RoleId = 2
             };
 
@@ -49,6 +62,9 @@ namespace WebApplication1.Controllers
             await _context.SaveChangesAsync();
             await _passwordService.SavePasswordHistory(user);
             await _context.Entry(user).Reference(u => u.Role).LoadAsync();
+
+            // Create a bank account for the new user automatically
+            await _bankingService.CreateAccountAsync(user.Id);
 
             return Ok(new AuthResponse
             {
@@ -68,7 +84,10 @@ namespace WebApplication1.Controllers
                 .FirstOrDefaultAsync(u => u.Email == request.Email);
 
             if (user == null)
-                return Unauthorized("Invalid email or password");
+                return Unauthorized(new
+                {
+                    message = "Invalid email or password"
+                });
 
             if (_passwordService.IsLockedOut(user))
                 return Unauthorized($"Account locked. Try again after {user.LockoutEnd}");
@@ -109,22 +128,43 @@ namespace WebApplication1.Controllers
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var user = await _context.Users.FindAsync(userId);
 
-            if (user == null) return NotFound();
+            if (user == null)
+                return NotFound();
 
             if (!BCrypt.Net.BCrypt.Verify(request.CurrentPassword, user.PasswordHash))
-                return BadRequest("Current password is incorrect");
+            {
+                return BadRequest(new
+                {
+                    message = "Current password is incorrect"
+                });
+            }
 
             if (!_passwordService.IsPasswordValid(request.NewPassword))
-                return BadRequest("Password must be 8+ chars, with uppercase, lowercase, number and special character");
+            {
+                return BadRequest(new
+                {
+                    message = "Password must contain uppercase, lowercase, number and special character"
+                });
+            }
 
             if (await _passwordService.IsPasswordUsedBefore(user, request.NewPassword))
-                return BadRequest("Cannot reuse last 3 passwords");
+            {
+                return BadRequest(new
+                {
+                    message = "Cannot reuse last 3 passwords"
+                });
+            }
 
             await _passwordService.SavePasswordHistory(user);
+
             user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
+
             await _context.SaveChangesAsync();
 
-            return Ok(new { message = "Password changed successfully" });
+            return Ok(new
+            {
+                message = "Password changed successfully"
+            });
         }
 
         // US-10 Forgot Password
@@ -140,7 +180,7 @@ namespace WebApplication1.Controllers
             user.ResetPasswordTokenExpiry = DateTime.UtcNow.AddHours(1);
             await _context.SaveChangesAsync();
 
-            // في الـ Production هنبعت Email، دلوقتي بنرجع الـ Token مباشرة للـ Testing
+            // In production, send token via email. For now, return it directly for testing.
             return Ok(new { message = "Reset token generated", token = user.ResetPasswordToken });
         }
 
@@ -150,8 +190,16 @@ namespace WebApplication1.Controllers
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
 
-            if (user == null || user.ResetPasswordToken != request.Token)
-                return BadRequest("Invalid token");
+            var decodedToken = Uri.UnescapeDataString(request.Token).Trim();
+
+            if (user == null || string.IsNullOrEmpty(user.ResetPasswordToken)
+    || user.ResetPasswordToken.Trim() != decodedToken)
+            {
+                return BadRequest(new
+                {
+                    message = "Invalid token"
+                });
+            }
 
             if (user.ResetPasswordTokenExpiry < DateTime.UtcNow)
                 return BadRequest("Token expired");
@@ -163,12 +211,54 @@ namespace WebApplication1.Controllers
                 return BadRequest("Cannot reuse last 3 passwords");
 
             await _passwordService.SavePasswordHistory(user);
+
             user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
             user.ResetPasswordToken = null;
             user.ResetPasswordTokenExpiry = null;
+
             await _context.SaveChangesAsync();
 
             return Ok(new { message = "Password reset successfully" });
         }
+
+        // Verify User Identity
+        [HttpPost("verify-user")]
+        public async Task<IActionResult> VerifyUser(VerifyUserDto request)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u =>
+
+    u.Username.ToLower().Trim() == request.FullName.ToLower().Trim()
+
+    && u.PhoneNumber == request.PhoneNumber
+
+    && u.Address != null
+    && u.Address.ToLower().Trim() == request.Address.ToLower().Trim()
+
+    && u.NationalId != null
+
+    && u.NationalId.EndsWith(request.NationalId)
+);
+
+            if (user == null)
+            {
+                return BadRequest(new
+                {
+                    message = "Information does not match our records"
+                });
+            }
+
+            user.ResetPasswordToken = _passwordService.GenerateResetToken();
+            user.ResetPasswordTokenExpiry = DateTime.UtcNow.AddHours(1);
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                message = "Identity verified successfully",
+                token = user.ResetPasswordToken,
+                email = user.Email
+            });
+        }
     }
 }
+    

@@ -1,0 +1,320 @@
+/* ================= GLOBAL ================= */
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+:root{
+--primary:#0B1C39;
+--primary-light:#162447;
+--gold:#C9A227;
+--gold-light:#E6C75A;
+--white:#ffffff;
+--gray:#888;
+}
+
+/* ================= BODY ================= */
+body{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(135deg,var(--primary),var(--primary-light));
+}
+
+/* ================= CONTAINER ================= */
+.container{
+background:var(--white);
+width:900px;
+height:520px;
+border-radius:20px;
+position:relative;
+overflow:hidden;
+box-shadow:0 40px 100px rgba(0,0,0,.35);
+}
+
+/* ================= FORMS ================= */
+.form-container{
+position:absolute;
+top:0;
+height:100%;
+width:50%;
+left:0;
+transition:all .6s ease-in-out;
+}
+
+.form{
+background:#fff;
+display:flex;
+flex-direction:column;
+justify-content:flex-start;
+align-items:center;
+padding:35px 45px;
+height:100%;
+text-align:center;
+position:absolute;
+width:100%;
+transition:all .6s ease-in-out;
+overflow-y:auto;
+}
+
+/* Scroll */
+.form::-webkit-scrollbar{
+width:6px;
+}
+.form::-webkit-scrollbar-thumb{
+background:var(--primary);
+border-radius:10px;
+}
+.form::-webkit-scrollbar-track{
+background:#f1f1f1;
+}
+
+.login-form{ z-index:2; }
+.register-form{ opacity:0; z-index:1; }
+
+/* ================= BRAND ================= */
+.bank-brand h1{
+font-size:20px;
+font-weight:700;
+margin-bottom:5px;
+color:var(--primary);
+}
+
+.secure-text{
+font-size:12px;
+color:var(--gold);
+}
+
+/* ================= INPUTS ================= */
+.input-box{
+position:relative;
+margin:12px 0;
+width:100%;
+}
+
+.input-box i{
+position:absolute;
+top:12px;
+left:10px;
+color:var(--primary);
+}
+
+.input-box input,
+.input-box select{
+width:100%;
+padding:10px 10px 10px 35px;
+border:none;
+border-bottom:2px solid #ccc;
+outline:none;
+background:transparent;
+transition:.3s;
+}
+
+.input-box input:focus,
+.input-box select:focus{
+border-bottom:2px solid var(--gold);
+}
+
+/* ================= PASSWORD TOGGLE ================= */
+.password-box{ position:relative; }
+
+.toggle-pass{
+position:absolute;
+right:10px;
+top:12px;
+cursor:pointer;
+color:var(--gray);
+}
+
+/* ================= OPTIONS ================= */
+.options{
+display:flex;
+justify-content:space-between;
+width:100%;
+font-size:13px;
+margin:10px 0;
+}
+
+/* ================= BUTTON ================= */
+.btn{
+margin-top:15px;
+padding:10px 30px;
+border:none;
+border-radius:25px;
+background:var(--primary);
+color:white;
+cursor:pointer;
+transition:.3s;
+font-weight:500;
+}
+
+.btn:hover{
+background:var(--gold);
+color:var(--primary);
+transform:scale(1.05);
+}
+
+/* Loader */
+.loader{
+display:none;
+width:16px;
+height:16px;
+border:2px solid #fff;
+border-top:2px solid transparent;
+border-radius:50%;
+animation:spin .6s linear infinite;
+}
+
+@keyframes spin{
+100%{ transform:rotate(360deg); }
+}
+
+.btn.loading .btn-text{ display:none; }
+.btn.loading .loader{ display:inline-block; }
+
+/* ================= SOCIAL ================= */
+.social-login{
+margin-top:15px;
+}
+
+.social-buttons{
+display:flex;
+justify-content:center;
+gap:10px;
+margin-top:10px;
+}
+
+.social-btn{
+display:flex;
+align-items:center;
+gap:8px;
+padding:8px 15px;
+border:none;
+border-radius:5px;
+cursor:pointer;
+font-weight:500;
+color:white;
+transition:.3s;
+}
+
+.social-btn.google{ background:#DB4437; }
+.social-btn.facebook{ background:#3B5998; }
+.social-btn.apple{ background:#000; }
+
+.social-btn:hover{ opacity:.85; }
+
+.oauth-note{
+font-size:11px;
+color:#666;
+margin-top:5px;
+}
+
+/* ================= LEGAL ================= */
+.legal{
+font-size:11px;
+margin-top:10px;
+}
+
+.legal a{
+color:var(--gold);
+text-decoration:none;
+}
+
+.support{
+font-size:12px;
+margin-top:8px;
+}
+
+.support a{
+color:var(--gold);
+font-weight:500;
+}
+
+/* ================= ICON CIRCLE ================= */
+.icon-circle{
+width:65px;
+height:65px;
+border-radius:50%;
+background:linear-gradient(135deg,var(--primary),var(--primary-light));
+display:flex;
+justify-content:center;
+align-items:center;
+color:white;
+font-size:26px;
+margin-bottom:15px;
+}
+
+/* ================= OVERLAY ================= */
+.overlay-container{
+position:absolute;
+top:0;
+left:50%;
+width:50%;
+height:100%;
+overflow:hidden;
+transition:transform .6s ease-in-out;
+z-index:100;
+}
+
+.overlay{
+background:linear-gradient(135deg,var(--primary),#1C2E4A);
+color:#fff;
+position:relative;
+left:-100%;
+height:100%;
+width:200%;
+transform:translateX(0);
+transition:transform .6s ease-in-out;
+display:flex;
+}
+
+.overlay-panel{
+width:50%;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+padding:40px;
+}
+
+.ghost{
+background:transparent;
+border:2px solid var(--gold);
+padding:8px 25px;
+border-radius:25px;
+color:var(--gold);
+cursor:pointer;
+margin-top:15px;
+transition:.3s;
+}
+
+.ghost:hover{
+background:var(--gold);
+color:var(--primary);
+}
+
+/* ================= ANIMATION ================= */
+.container.right-active .form-container{
+transform:translateX(100%);
+}
+
+.container.right-active .overlay-container{
+transform:translateX(-100%);
+}
+
+.container.right-active .overlay{
+transform:translateX(50%);
+}
+
+.container.right-active .login-form{
+opacity:0;
+}
+
+.container.right-active .register-form{
+opacity:1;
+z-index:5;
+}
