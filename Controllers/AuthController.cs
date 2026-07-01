@@ -71,6 +71,7 @@ namespace WebApplication1.Controllers
                 Token = _jwtService.GenerateToken(user),
                 Username = user.Username,
                 Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
                 Role = user.Role.Name
             });
         }
@@ -108,6 +109,7 @@ namespace WebApplication1.Controllers
                 Token = _jwtService.GenerateToken(user),
                 Username = user.Username,
                 Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
                 Role = user.Role.Name
             });
         }
@@ -227,17 +229,13 @@ namespace WebApplication1.Controllers
         {
             var user = await _context.Users.FirstOrDefaultAsync(u =>
 
-    u.Username.ToLower().Trim() == request.FullName.ToLower().Trim()
-
-    && u.PhoneNumber == request.PhoneNumber
-
-    && u.Address != null
-    && u.Address.ToLower().Trim() == request.Address.ToLower().Trim()
-
-    && u.NationalId != null
-
-    && u.NationalId.EndsWith(request.NationalId)
-);
+                u.Username.ToLower().Trim() == request.FullName.ToLower().Trim()
+                && u.PhoneNumber == request.PhoneNumber
+                && u.Address != null
+                && u.Address.ToLower().Trim() == request.Address.ToLower().Trim()
+                && u.NationalId != null
+                && u.NationalId.EndsWith(request.NationalId)
+            );
 
             if (user == null)
             {
@@ -259,6 +257,31 @@ namespace WebApplication1.Controllers
                 email = user.Email
             });
         }
+
+        [HttpPut("update-profile")]
+        [Authorize]
+        public async Task<IActionResult> UpdateProfile(UpdateProfileDto request)
+        {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+            var user = await _context.Users.FindAsync(userId);
+
+            if (user == null)
+                return NotFound();
+
+            user.Username = request.Username;
+            user.Email = request.Email;
+            user.PhoneNumber = request.PhoneNumber;
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                message = "Profile updated successfully",
+                username = user.Username,
+                email = user.Email,
+                phoneNumber = user.PhoneNumber
+            });
+        }
     }
 }
-    

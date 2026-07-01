@@ -59,23 +59,21 @@ if (loginForm) {
       });
 
       const data = await response.json();
-
         if (response.ok) {
-            console.log(data);
+            console.log("Login Response:", data);
+            console.log("Username:", data.username);
+            console.log("Email:", data.email);
+            console.log("Phone:", data.phoneNumber);
 
             localStorage.setItem("fullName", data.username);
-
             localStorage.setItem("userEmail", data.email);
-
+            localStorage.setItem("phoneNumber", data.phoneNumber);
             localStorage.setItem("token", data.token);
-
             localStorage.setItem("loggedIn", "true");
 
-            console.log(data.Username);
-
             window.location = "index.html";
-        
-      } else {
+        }
+        else {
         toast("❌ " + (data.message || "Wrong email or password"));
         btn.classList.remove("loading");
       }
