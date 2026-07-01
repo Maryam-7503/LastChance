@@ -2051,7 +2051,130 @@
 
     if (username) {
         document.getElementById("username").innerText = username;
+}
+// ========== SAVE BENEFICIARY ==========
+async function saveBeneficiary() {
+    const inputName = document.getElementById("inputName");
+    const inputAcc = document.getElementById("inputAcc");
+    const inputBank = document.getElementById("inputBank");
+    const errName = document.getElementById("errName");
+    const errAcc = document.getElementById("errAcc");
+    const btnSave = document.getElementById("btnSave");
+
+    const name = inputName?.value?.trim() || "";
+    const acc = inputAcc?.value?.trim() || "";
+    const bank = inputBank?.value || "Winners Bank";
+
+    let valid = true;
+
+    if (errName) errName.textContent = "";
+    if (errAcc) errAcc.textContent = "";
+
+    if (!name) {
+        if (errName) errName.textContent = "Full name is required";
+        valid = false;
     }
+
+    if (!acc) {
+        if (errAcc) errAcc.textContent = "Account number is required";
+        valid = false;
+    }
+
+    if (!valid) return;
+
+    const token = getToken();
+    if (!token) {
+        redirectLogin();
+        return;
+    }
+
+    if (btnSave) {
+        btnSave.disabled = true;
+        btnSave.textContent = "Saving...";
+    }
+
+    try {
+        const res = await fetch("/api/Banking/beneficiaries", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                name: name,
+                accountNumber: acc,
+                bankName: bank,
+            }),
+        });
+
+        if (res.status === 401) {
+            redirectLogin();
+            return;
+        }
+
+        if (!res.ok) {
+            const errText = await res.text().catch(() => "");
+            throw new Error(errText || "Failed to save beneficiary");
+        }
+
+        closeModal("addModal");
+        showToast("Beneficiary added successfully");
+        await loadBeneficiaries();
+    } catch (error) {
+        console.error(error);
+        if (errAcc) errAcc.textContent = "Failed to save. Try again.";
+        showToast("Failed to add beneficiary", false);
+    } finally {
+        if (btnSave) {
+            btnSave.disabled = false;
+            btnSave.textContent = "Save Beneficiary";
+        }
+    }
+}
+
+// ========== DELETE BENEFICIARY ==========
+function deleteBene(id) {
+    deleteTargetId = id;
+    const deleteModal = document.getElementById("deleteModal");
+    if (deleteModal) deleteModal.classList.add("open");
+}
+
+async function confirmDelete() {
+    if (deleteTargetId == null) return;
+
+    const token = getToken();
+    if (!token) {
+        redirectLogin();
+        return;
+    }
+
+    try {
+        const res = await fetch(`/api/Banking/beneficiaries/${deleteTargetId}`, {
+            method: "DELETE",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        if (res.status === 401) {
+            redirectLogin();
+            return;
+        }
+
+        if (!res.ok) {
+            throw new Error("Failed to delete beneficiary");
+        }
+
+        closeModal("deleteModal");
+        showToast("Beneficiary deleted");
+        await loadBeneficiaries();
+    } catch (error) {
+        console.error(error);
+        showToast("Failed to delete beneficiary", false);
+    } finally {
+        deleteTargetId = null;
+    }
+}
 </script>
 </body>
 </html>
