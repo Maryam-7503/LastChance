@@ -66,23 +66,44 @@ namespace WebApplication1.Services
         public async Task<List<TransactionDto>> GetTransactionHistoryAsync(int userId)
         {
             var account = await GetAccountByUserIdAsync(userId);
-            if (account == null) return new List<TransactionDto>();
+            if (account == null)
+                return new List<TransactionDto>();
 
-            return await _context.Transactions
+            var list = await _context.Transactions
                 .Where(t => t.AccountId == account.Id || t.ToAccountId == account.Id)
-                .OrderByDescending(t => t.CreatedAt)
-                .Select(t => new TransactionDto
-                {
-                    Id = t.Id,
-                    Amount = t.Amount,
-                    Type = t.Type,
-                    Status = t.Status,
-                    Description = t.Description,
-                    ReferenceNumber = t.ReferenceNumber,
-                    CreatedAt = t.CreatedAt,
-                    ToAccountNumber = t.ToAccount != null ? t.ToAccount.AccountNumber : null
-                })
                 .ToListAsync();
+
+            foreach (var t in list)
+            {
+                Console.WriteLine($"Transaction {t.Id}");
+                Console.WriteLine($"Current Account = {account.Id}");
+                Console.WriteLine($"Sender = {t.AccountId}");
+                Console.WriteLine($"Receiver = {t.ToAccountId}");
+            }
+
+            var transactions = await _context.Transactions
+       .Where(t => t.AccountId == account.Id || t.ToAccountId == account.Id)
+       .OrderByDescending(t => t.CreatedAt)
+       .Select(t => new TransactionDto
+       {
+           Id = t.Id,
+           Amount = t.Amount,
+           Type = t.Type,
+           Status = t.Status,
+           Description = t.Description,
+           ReferenceNumber = t.ReferenceNumber,
+           CreatedAt = t.CreatedAt,
+           ToAccountNumber = t.ToAccount != null ? t.ToAccount.AccountNumber : null,
+           Direction = t.AccountId == account.Id ? "Sent" : "Received"
+       })
+       .ToListAsync();
+
+            foreach (var tx in transactions)
+            {
+                Console.WriteLine($"Direction = {tx.Direction}");
+            }
+
+            return transactions;
         }
 
         // ── Transfer ──
