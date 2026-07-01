@@ -21,7 +21,6 @@
         public string? ReferenceNumber { get; set; }
         public DateTime CreatedAt { get; set; }
         public string? ToAccountNumber { get; set; }
-        public string Direction { get; set; } = string.Empty;
     }
 
     // Transfer

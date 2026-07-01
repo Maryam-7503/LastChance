@@ -1106,8 +1106,7 @@
                 };
 
                 allTransactions = data.map(tx => {
-                    const isOut = tx.direction === "Sent" || tx.direction === "Out";
-
+                    const isOut = tx.type === "Transfer" || tx.type === "BillPayment";
                     return {
                         id: tx.id,
                         referenceNumber: tx.referenceNumber || `TXN${tx.id}`,
