@@ -229,13 +229,7 @@ main aside .sidebar a.active {
 color : var(--color-primary)
 }
 
-main aside .sidebar a.active::before{
-    content: '';
-    width: 6px;
-    height: 100%;
-    position:absolute;
-    background: var(--color-primary);
-}
+main aside 
 main aside .sidebar a:hover {
     color: var(--color-primary)
 }

@@ -179,7 +179,6 @@ const searchItems = [
     { name: "Transfer History", icon: "history", url: "transfer_his.html" },
     { name: "Beneficiaries", icon: "group", url: "Beneficiaries.HTML" },
     { name: "Bills Payment", icon: "payment", url: "bills.html" },
-    { name: "Admin Panel", icon: "admin_panel_settings", url: "adminmonitor.html" },
     { name: "Settings & Security", icon: "settings", url: "settings.html" },
     { name: "Support", icon: "help_center", url: "support.html" },
     { name: "Change Password", icon: "vpn_key", url: "change.html" },
