@@ -543,6 +543,9 @@
           align-self: flex-start;
         }
       }
+        :root {
+            --transition: all .3s ease;
+        }
         /* ===== Edit Profile Modal ===== */
 
         #editModal {
@@ -793,7 +796,7 @@
 
                               </button>
                           </div>
-                         
+
                       </div>
 
                       <div class="settings-section">
@@ -924,19 +927,7 @@
                       }
                   });
               }
-
-              const themeBtn = document.querySelector(".theme-btn");
-              if (themeBtn) {
-                  themeBtn.addEventListener("click", () => {
-                      document.body.classList.toggle("dark-theme");
-                      themeBtn
-                          .querySelector("span:first-child")
-                          .classList.toggle("active");
-                      themeBtn
-                          .querySelector("span:last-child")
-                          .classList.toggle("active");
-                  });
-              }
+              
 
               const toggles = document.querySelectorAll(".toggle-switch");
               toggles.forEach((toggle) => {
@@ -945,12 +936,7 @@
                   });
               });
 
-              document
-                  .getElementById("logout-link")
-                  .addEventListener("click", function (e) {
-                      e.preventDefault();
-                      alert("Logged out (demo). In a real app you would be redirected.");
-                  });
+              
           })();
       </script>
       <script>
@@ -1042,5 +1028,6 @@
               }
           };
       </script>
+      <script src="js/theme.js"></script>
   </body>
 </html>

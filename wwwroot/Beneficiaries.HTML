@@ -1064,7 +1064,7 @@
                 <input type="search" placeholder="Search transactions, beneficiaries…" />
             </div>
             <div class="profile-area">
-                <div class="theme-btn" onclick="toggleTheme()">
+                <div class="theme-btn">
                     <span class="material-icons-sharp active" id="lightIcon">light_mode</span>
                     <span class="material-icons-sharp" id="darkIcon">dark_mode</span>
                 </div>
@@ -1262,919 +1262,916 @@
         </div>
     </div>
     <script>
-  // ========== CONSTANTS ==========
-  const COLORS = [
-    "linear-gradient(135deg,#a063f5,#4707ea)",
-    "linear-gradient(135deg,#4f8ef7,#0d1b3e)",
-    "linear-gradient(135deg,#22ca4b,#0d6e2c)",
-    "linear-gradient(135deg,#eab507,#b87a00)",
-    "linear-gradient(135deg,#ff4336,#9b1c1c)",
-    "linear-gradient(135deg,#38d9a9,#0b6e5a)",
-    "linear-gradient(135deg,#f78c6c,#b04a1e)",
-    "linear-gradient(135deg,#7c83fd,#3a3fc2)",
-  ];
+        // ========== CONSTANTS ==========
+        const COLORS = [
+            "linear-gradient(135deg,#a063f5,#4707ea)",
+            "linear-gradient(135deg,#4f8ef7,#0d1b3e)",
+            "linear-gradient(135deg,#22ca4b,#0d6e2c)",
+            "linear-gradient(135deg,#eab507,#b87a00)",
+            "linear-gradient(135deg,#ff4336,#9b1c1c)",
+            "linear-gradient(135deg,#38d9a9,#0b6e5a)",
+            "linear-gradient(135deg,#f78c6c,#b04a1e)",
+            "linear-gradient(135deg,#7c83fd,#3a3fc2)",
+        ];
 
-  // ========== STATE ==========
-  let beneficiaries = [];
-  let favourites = new Set();
-  let deleteTargetId = null;
-  let currentView = "grid";
+        // ========== STATE ==========
+        let beneficiaries = [];
+        let favourites = new Set();
+        let deleteTargetId = null;
+        let currentView = "grid";
 
-  // ========== AUTH ==========
-  function getToken() {
-    return localStorage.getItem("token");
-  }
-
-  function redirectLogin() {
-    localStorage.removeItem("token");
-    window.location.href = "login.html";
-  }
-
-  // ========== TOAST ==========
-  function showToast(msg, success = true) {
-    const t = document.createElement("div");
-
-    t.className = "toast";
-    t.style.background = success
-      ? "var(--color-success)"
-      : "var(--color-danger)";
-
-    t.textContent = msg;
-
-    document.body.appendChild(t);
-
-    setTimeout(() => {
-      t.remove();
-    }, 3000);
-  }
-
-  // ========== LOAD USER INFO ==========
-  async function loadUserInfo() {
-    const token = getToken();
-
-    if (!token) {
-      redirectLogin();
-      return;
-    }
-
-    try {
-      const res = await fetch("/api/Auth/me", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (res.ok) {
-        const user = await res.json();
-
-        const name =
-          user.username ||
-          user.email ||
-          "User";
-
-        const navName =
-          document.getElementById("navName");
-
-        const navInitials =
-          document.getElementById("navInitials");
-
-        if (navName) {
-          navName.textContent = name;
+        // ========== AUTH ==========
+        function getToken() {
+            return localStorage.getItem("token");
         }
 
-        if (navInitials) {
-          navInitials.textContent =
-            name.slice(0, 2).toUpperCase();
-        }
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  // ========== LOAD BENEFICIARIES ==========
-  async function loadBeneficiaries() {
-    const token = getToken();
-
-    if (!token) {
-      redirectLogin();
-      return;
-    }
-
-    try {
-      const res = await fetch(
-        "/api/Banking/beneficiaries",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (res.status === 401) {
-        redirectLogin();
-        return;
-      }
-
-      const data = await res.json();
-
-      if (!Array.isArray(data)) {
-        throw new Error("Invalid API response");
-      }
-
-      beneficiaries = data.map((b, i) => ({
-        id: b.id,
-        name: b.name || "Unknown",
-        acc: String(b.accountNumber || ""),
-        bank: b.bankName || "Winners Bank",
-        color: COLORS[i % COLORS.length],
-      }));
-
-      const loadingState =
-        document.getElementById("loadingState");
-
-      const gridView =
-        document.getElementById("gridView");
-
-      const listView =
-        document.getElementById("listView");
-
-      if (loadingState) {
-        loadingState.style.display = "none";
-      }
-
-      if (gridView) {
-        gridView.style.display =
-          currentView === "grid"
-            ? "grid"
-            : "none";
-      }
-
-      if (listView) {
-        listView.style.display =
-          currentView === "list"
-            ? "flex"
-            : "none";
-      }
-
-      populateBankFilter();
-      renderBeneficiaries();
-    } catch (error) {
-      console.error(error);
-
-      const loadingState =
-        document.getElementById("loadingState");
-
-      if (loadingState) {
-        loadingState.innerHTML = `
-          <p style="color:var(--color-danger);">
-            ❌ Failed to load beneficiaries.
-          </p>
-        `;
-      }
-    }
-  }
-
-  // ========== HELPERS ==========
-  function initials(name = "") {
-    return name
-      .split(" ")
-      .map(word => word[0] || "")
-      .join("")
-      .toUpperCase()
-      .slice(0, 2);
-  }
-
-  function masked(acc = "") {
-    return "****" + String(acc).slice(-4);
-  }
-
-  function updateStats() {
-    const total =
-      document.getElementById("statTotal");
-
-    const fav =
-      document.getElementById("statFav");
-
-    const banksCount =
-      document.getElementById("statBanks");
-
-    if (total) {
-      total.textContent =
-        beneficiaries.length.toString();
-    }
-
-    if (fav) {
-      fav.textContent =
-        favourites.size.toString();
-    }
-
-    const banks = new Set(
-      beneficiaries.map(b => b.bank)
-    );
-
-    if (banksCount) {
-      banksCount.textContent =
-        banks.size.toString();
-    }
-  }
-
-  function populateBankFilter() {
-    const sel =
-      document.getElementById("bankFilter");
-
-    if (!sel) return;
-
-    const banks = [
-      ...new Set(
-        beneficiaries.map(b => b.bank)
-      ),
-    ];
-
-    sel.innerHTML =
-      '<option value="">All Banks</option>' +
-      banks
-        .map(
-          bank =>
-            `<option value="${bank}">
-              ${bank}
-            </option>`
-        )
-        .join("");
-  }
-
-  function getFiltered() {
-    const searchInput =
-      document.getElementById("searchInput");
-
-    const bankFilter =
-      document.getElementById("bankFilter");
-
-    const favFilter =
-      document.getElementById("favFilter");
-
-    const q =
-      searchInput?.value
-        ?.toLowerCase()
-        ?.trim() || "";
-
-    const bank =
-      bankFilter?.value || "";
-
-    const fav =
-      favFilter?.value || "";
-
-    return beneficiaries.filter(b => {
-      const matchQ =
-        b.name
-          .toLowerCase()
-          .includes(q) ||
-        b.acc.includes(q);
-
-      const matchB =
-        !bank || b.bank === bank;
-
-      const matchF =
-        !fav || favourites.has(b.id);
-
-      return (
-        matchQ &&
-        matchB &&
-        matchF
-      );
-    });
-  }
-
-  // ========== RENDER ==========
-  function renderBeneficiaries() {
-    const list = getFiltered();
-
-    const grid =
-      document.getElementById("gridView");
-
-    const listV =
-      document.getElementById("listView");
-
-    const empty =
-      document.getElementById("emptyState");
-
-    if (!grid || !listV || !empty) {
-      return;
-    }
-
-    if (list.length === 0) {
-      grid.innerHTML = "";
-      listV.innerHTML = "";
-
-      empty.style.display = "flex";
-
-      updateStats();
-      return;
-    }
-
-    empty.style.display = "none";
-
-    // GRID
-    grid.innerHTML = list
-      .map(
-        b => `
-      <div class="bene-card">
-        <span
-          class="material-icons-sharp fav-btn ${
-            favourites.has(b.id)
-              ? "active"
-              : ""
-          }"
-          onclick="toggleFav(${b.id})"
-        >
-          ${
-            favourites.has(b.id)
-              ? "star"
-              : "star_border"
-          }
-        </span>
-
-        <div
-          class="avatar"
-          style="background:${b.color}"
-        >
-          ${initials(b.name)}
-        </div>
-
-        <div class="bene-name">
-          ${b.name}
-        </div>
-
-        <div class="bene-bank">
-          ${b.bank}
-        </div>
-
-        <div class="bene-acc">
-          ${masked(b.acc)}
-        </div>
-
-        <div class="card-actions">
-          <button
-            class="btn-send"
-            onclick="sendTo(${b.id})"
-          >
-            <span class="material-icons-sharp">
-              send
-            </span>
-            Send
-          </button>
-
-          <button
-            class="btn-more"
-            onclick="deleteBene(${b.id})"
-          >
-            <span class="material-icons-sharp">
-              delete
-            </span>
-          </button>
-        </div>
-      </div>
-    `
-      )
-      .join("");
-
-    // LIST
-    listV.innerHTML = list
-      .map(
-        b => `
-      <div class="bene-list-item">
-
-        <div
-          class="avatar"
-          style="background:${b.color}"
-        >
-          ${initials(b.name)}
-        </div>
-
-        <div class="bene-info">
-          <div class="bene-name">
-            ${b.name}
-          </div>
-
-          <div class="bene-sub">
-            ${b.bank} · ${masked(b.acc)}
-          </div>
-        </div>
-
-        <span
-          class="material-icons-sharp fav-star ${
-            favourites.has(b.id)
-              ? "active"
-              : ""
-          }"
-          onclick="toggleFav(${b.id})"
-        >
-          ${
-            favourites.has(b.id)
-              ? "star"
-              : "star_border"
-          }
-        </span>
-
-        <div class="list-actions">
-          <button
-            class="btn-send"
-            onclick="sendTo(${b.id})"
-          >
-            <span class="material-icons-sharp">
-              send
-            </span>
-            Send
-          </button>
-
-          <button
-            class="btn-del"
-            onclick="deleteBene(${b.id})"
-          >
-            <span class="material-icons-sharp">
-              delete
-            </span>
-          </button>
-        </div>
-      </div>
-    `
-      )
-      .join("");
-
-    updateStats();
-  }
-
-  // ========== VIEW ==========
-  function setView(v) {
-    currentView = v;
-
-    const gridView =
-      document.getElementById("gridView");
-
-    const listView =
-      document.getElementById("listView");
-
-    const gridBtn =
-      document.getElementById("gridBtn");
-
-    const listBtn =
-      document.getElementById("listBtn");
-
-    if (gridView) {
-      gridView.style.display =
-        v === "grid"
-          ? "grid"
-          : "none";
-    }
-
-    if (listView) {
-      listView.style.display =
-        v === "list"
-          ? "flex"
-          : "none";
-    }
-
-    if (gridBtn) {
-      gridBtn.classList.toggle(
-        "active",
-        v === "grid"
-      );
-    }
-
-    if (listBtn) {
-      listBtn.classList.toggle(
-        "active",
-        v === "list"
-      );
-    }
-  }
-
-  // ========== FAV ==========
-  function toggleFav(id) {
-    if (favourites.has(id)) {
-      favourites.delete(id);
-    } else {
-      favourites.add(id);
-    }
-
-    renderBeneficiaries();
-  }
-
-  // ========== SEND ==========
-  function sendTo(id) {
-    const b = beneficiaries.find(
-      x => x.id === id
-    );
-
-    if (b) {
-      window.location.href =
-        `transfer.html?acc=${b.acc}&name=` +
-        encodeURIComponent(b.name);
-    }
-  }
-
-  // ========== ADD MODAL ==========
-  function openAddModal() {
-    const modalTitle =
-      document.getElementById("modalTitle");
-
-    const inputName =
-      document.getElementById("inputName");
-
-    const inputAcc =
-      document.getElementById("inputAcc");
-
-    const inputBank =
-      document.getElementById("inputBank");
-
-    const errName =
-      document.getElementById("errName");
-
-    const errAcc =
-      document.getElementById("errAcc");
-
-    const addModal =
-      document.getElementById("addModal");
-
-    if (modalTitle) {
-      modalTitle.textContent =
-        "Add Beneficiary";
-    }
-
-    if (inputName) {
-      inputName.value = "";
-    }
-
-    if (inputAcc) {
-      inputAcc.value = "";
-    }
-
-    if (inputBank) {
-      inputBank.value =
-        "Winners Bank";
-    }
-
-    if (errName) {
-      errName.textContent = "";
-    }
-
-    if (errAcc) {
-      errAcc.textContent = "";
-    }
-
-    if (addModal) {
-      addModal.classList.add("open");
-    }
-  }
-
-  // ========== CLOSE MODAL ==========
-  function closeModal(id) {
-    const modal =
-      document.getElementById(id);
-
-    if (modal) {
-      modal.classList.remove("open");
-    }
-  }
-
-  function closeOnOverlay(e, id) {
-    const modal =
-      document.getElementById(id);
-
-    if (modal && e.target === modal) {
-      closeModal(id);
-    }
-  }
-
-  // ========== THEME ==========
-  function toggleTheme() {
-    document.body.classList.toggle(
-      "dark-theme"
-    );
-
-    const light =
-      !document.body.classList.contains(
-        "dark-theme"
-      );
-
-    const lightIcon =
-      document.getElementById("lightIcon");
-
-    const darkIcon =
-      document.getElementById("darkIcon");
-
-    if (lightIcon) {
-      lightIcon.classList.toggle(
-        "active",
-        light
-      );
-    }
-
-    if (darkIcon) {
-      darkIcon.classList.toggle(
-        "active",
-        !light
-      );
-    }
-  }
-
-  // ========== SIDEBAR ==========
-  function toggleSidebar() {
-    const sidebar =
-      document.getElementById("sidebar");
-
-    if (sidebar) {
-      sidebar.classList.toggle("open");
-    }
-  }
-
-  // ========== SEARCH ==========
-  const navbarSearch =
-    document.querySelector(
-      ".search-bar input"
-    );
-
-  if (
-    navbarSearch instanceof
-    HTMLInputElement
-  ) {
-    const searchDropdown =
-      document.createElement("div");
-
-    searchDropdown.className =
-      "search-dropdown";
-
-    searchDropdown.style.cssText = `
-      position:absolute;
-      top:100%;
-      left:0;
-      right:0;
-      background:white;
-      border-radius:10px;
-      box-shadow:0 4px 20px rgba(0,0,0,0.15);
-      z-index:1000;
-      display:none;
-      max-height:300px;
-      overflow-y:auto;
-    `;
-
-    const searchBarContainer =
-      document.querySelector(
-        ".search-bar"
-      );
-
-    if (searchBarContainer) {
-      searchBarContainer.style.position =
-        "relative";
-
-      searchBarContainer.appendChild(
-        searchDropdown
-      );
-    }
-
-    const searchItems = [
-      {
-        name: "Dashboard",
-        icon: "dashboard",
-        url: "index.html",
-      },
-      {
-        name: "Transfer Money",
-        icon: "send",
-        url: "transfer.html",
-      },
-      {
-        name: "Beneficiaries",
-        icon: "group",
-        url: "Beneficiaries.HTML",
-      },
-    ];
-
-    navbarSearch.addEventListener(
-      "input",
-      function (e) {
-        const term =
-          e.target.value
-            .toLowerCase()
-            .trim();
-
-        if (!term) {
-          searchDropdown.style.display =
-            "none";
-          return;
+        function redirectLogin() {
+            localStorage.removeItem("token");
+            window.location.href = "login.html";
         }
 
-        const filtered =
-          searchItems.filter(item =>
-            item.name
-              .toLowerCase()
-              .includes(term)
-          );
+        // ========== TOAST ==========
+        function showToast(msg, success = true) {
+            const t = document.createElement("div");
 
-        if (!filtered.length) {
-          searchDropdown.innerHTML = `
-            <div style="padding:12px;color:#888;">
-              No results found
-            </div>
-          `;
-        } else {
-          searchDropdown.innerHTML =
-            filtered
-              .map(
-                item => `
-              <div
-                class="search-item"
-                data-url="${item.url}"
-                style="
-                  display:flex;
-                  align-items:center;
-                  gap:12px;
-                  padding:12px 16px;
-                  cursor:pointer;
-                "
-              >
-                <span class="material-icons-sharp">
-                  ${item.icon}
-                </span>
+            t.className = "toast";
+            t.style.background = success
+                ? "var(--color-success)"
+                : "var(--color-danger)";
 
-                <span>
-                  ${item.name}
-                </span>
-              </div>
-            `
-              )
-              .join("");
+            t.textContent = msg;
 
-          document
-            .querySelectorAll(
-              ".search-item"
-            )
-            .forEach(el => {
-              el.onclick = () => {
-                const url =
-                  el.dataset.url || "#";
+            document.body.appendChild(t);
 
-                window.location.href =
-                  url;
-              };
+            setTimeout(() => {
+                t.remove();
+            }, 3000);
+        }
+
+        // ========== LOAD USER INFO ==========
+        async function loadUserInfo() {
+            const token = getToken();
+
+            if (!token) {
+                redirectLogin();
+                return;
+            }
+
+            try {
+                const res = await fetch("/api/Auth/me", {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (res.ok) {
+                    const user = await res.json();
+
+                    const name =
+                        user.username ||
+                        user.email ||
+                        "User";
+
+                    const navName =
+                        document.getElementById("navName");
+
+                    const navInitials =
+                        document.getElementById("navInitials");
+
+                    if (navName) {
+                        navName.textContent = name;
+                    }
+
+                    if (navInitials) {
+                        navInitials.textContent =
+                            name.slice(0, 2).toUpperCase();
+                    }
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        // ========== LOAD BENEFICIARIES ==========
+        async function loadBeneficiaries() {
+            const token = getToken();
+
+            if (!token) {
+                redirectLogin();
+                return;
+            }
+
+            try {
+                const res = await fetch(
+                    "/api/Banking/beneficiaries",
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+
+                if (res.status === 401) {
+                    redirectLogin();
+                    return;
+                }
+
+                const data = await res.json();
+
+                if (!Array.isArray(data)) {
+                    throw new Error("Invalid API response");
+                }
+
+                beneficiaries = data.map((b, i) => ({
+                    id: b.id,
+                    name: b.name || "Unknown",
+                    acc: String(b.accountNumber || ""),
+                    bank: b.bankName || "Winners Bank",
+                    color: COLORS[i % COLORS.length],
+                }));
+
+                const loadingState =
+                    document.getElementById("loadingState");
+
+                const gridView =
+                    document.getElementById("gridView");
+
+                const listView =
+                    document.getElementById("listView");
+
+                if (loadingState) {
+                    loadingState.style.display = "none";
+                }
+
+                if (gridView) {
+                    gridView.style.display =
+                        currentView === "grid"
+                            ? "grid"
+                            : "none";
+                }
+
+                if (listView) {
+                    listView.style.display =
+                        currentView === "list"
+                            ? "flex"
+                            : "none";
+                }
+
+                populateBankFilter();
+                renderBeneficiaries();
+            } catch (error) {
+                console.error(error);
+
+                const loadingState =
+                    document.getElementById("loadingState");
+
+                if (loadingState) {
+                    loadingState.innerHTML = `
+              <p style="color:var(--color-danger);">
+                ❌ Failed to load beneficiaries.
+              </p>
+            `;
+                }
+            }
+        }
+
+        // ========== HELPERS ==========
+        function initials(name = "") {
+            return name
+                .split(" ")
+                .map(word => word[0] || "")
+                .join("")
+                .toUpperCase()
+                .slice(0, 2);
+        }
+
+        function masked(acc = "") {
+            return "****" + String(acc).slice(-4);
+        }
+
+        function updateStats() {
+            const total =
+                document.getElementById("statTotal");
+
+            const fav =
+                document.getElementById("statFav");
+
+            const banksCount =
+                document.getElementById("statBanks");
+
+            if (total) {
+                total.textContent =
+                    beneficiaries.length.toString();
+            }
+
+            if (fav) {
+                fav.textContent =
+                    favourites.size.toString();
+            }
+
+            const banks = new Set(
+                beneficiaries.map(b => b.bank)
+            );
+
+            if (banksCount) {
+                banksCount.textContent =
+                    banks.size.toString();
+            }
+        }
+
+        function populateBankFilter() {
+            const sel =
+                document.getElementById("bankFilter");
+
+            if (!sel) return;
+
+            const banks = [
+                ...new Set(
+                    beneficiaries.map(b => b.bank)
+                ),
+            ];
+
+            sel.innerHTML =
+                '<option value="">All Banks</option>' +
+                banks
+                    .map(
+                        bank =>
+                            `<option value="${bank}">
+                  ${bank}
+                </option>`
+                    )
+                    .join("");
+        }
+
+        function getFiltered() {
+            const searchInput =
+                document.getElementById("searchInput");
+
+            const bankFilter =
+                document.getElementById("bankFilter");
+
+            const favFilter =
+                document.getElementById("favFilter");
+
+            const q =
+                searchInput?.value
+                    ?.toLowerCase()
+                    ?.trim() || "";
+
+            const bank =
+                bankFilter?.value || "";
+
+            const fav =
+                favFilter?.value || "";
+
+            return beneficiaries.filter(b => {
+                const matchQ =
+                    b.name
+                        .toLowerCase()
+                        .includes(q) ||
+                    b.acc.includes(q);
+
+                const matchB =
+                    !bank || b.bank === bank;
+
+                const matchF =
+                    !fav || favourites.has(b.id);
+
+                return (
+                    matchQ &&
+                    matchB &&
+                    matchF
+                );
             });
         }
 
-        searchDropdown.style.display =
-          "block";
-      }
-    );
+        // ========== RENDER ==========
+        function renderBeneficiaries() {
+            const list = getFiltered();
 
-    document.addEventListener(
-      "click",
-      e => {
-        if (
-          searchBarContainer &&
-          e.target instanceof Node &&
-          !searchBarContainer.contains(
-            e.target
-          )
-        ) {
-          searchDropdown.style.display =
-            "none";
+            const grid =
+                document.getElementById("gridView");
+
+            const listV =
+                document.getElementById("listView");
+
+            const empty =
+                document.getElementById("emptyState");
+
+            if (!grid || !listV || !empty) {
+                return;
+            }
+
+            if (list.length === 0) {
+                grid.innerHTML = "";
+                listV.innerHTML = "";
+
+                empty.style.display = "flex";
+
+                updateStats();
+                return;
+            }
+
+            empty.style.display = "none";
+
+            // GRID
+            grid.innerHTML = list
+                .map(
+                    b => `
+          <div class="bene-card">
+            <span
+              class="material-icons-sharp fav-btn ${favourites.has(b.id)
+                            ? "active"
+                            : ""
+                        }"
+              onclick="toggleFav(${b.id})"
+            >
+              ${favourites.has(b.id)
+                            ? "star"
+                            : "star_border"
+                        }
+            </span>
+
+            <div
+              class="avatar"
+              style="background:${b.color}"
+            >
+              ${initials(b.name)}
+            </div>
+
+            <div class="bene-name">
+              ${b.name}
+            </div>
+
+            <div class="bene-bank">
+              ${b.bank}
+            </div>
+
+            <div class="bene-acc">
+              ${masked(b.acc)}
+            </div>
+
+            <div class="card-actions">
+              <button
+                class="btn-send"
+                onclick="sendTo(${b.id})"
+              >
+                <span class="material-icons-sharp">
+                  send
+                </span>
+                Send
+              </button>
+
+              <button
+                class="btn-more"
+                onclick="deleteBene(${b.id})"
+              >
+                <span class="material-icons-sharp">
+                  delete
+                </span>
+              </button>
+            </div>
+          </div>
+        `
+                )
+                .join("");
+
+            // LIST
+            listV.innerHTML = list
+                .map(
+                    b => `
+          <div class="bene-list-item">
+
+            <div
+              class="avatar"
+              style="background:${b.color}"
+            >
+              ${initials(b.name)}
+            </div>
+
+            <div class="bene-info">
+              <div class="bene-name">
+                ${b.name}
+              </div>
+
+              <div class="bene-sub">
+                ${b.bank} · ${masked(b.acc)}
+              </div>
+            </div>
+
+            <span
+              class="material-icons-sharp fav-star ${favourites.has(b.id)
+                            ? "active"
+                            : ""
+                        }"
+              onclick="toggleFav(${b.id})"
+            >
+              ${favourites.has(b.id)
+                            ? "star"
+                            : "star_border"
+                        }
+            </span>
+
+            <div class="list-actions">
+              <button
+                class="btn-send"
+                onclick="sendTo(${b.id})"
+              >
+                <span class="material-icons-sharp">
+                  send
+                </span>
+                Send
+              </button>
+
+              <button
+                class="btn-del"
+                onclick="deleteBene(${b.id})"
+              >
+                <span class="material-icons-sharp">
+                  delete
+                </span>
+              </button>
+            </div>
+          </div>
+        `
+                )
+                .join("");
+
+            updateStats();
         }
-      }
-    );
-  }
 
-  // ========== INIT ==========
-  loadUserInfo();
-  loadBeneficiaries();
+        // ========== VIEW ==========
+        function setView(v) {
+            currentView = v;
+
+            const gridView =
+                document.getElementById("gridView");
+
+            const listView =
+                document.getElementById("listView");
+
+            const gridBtn =
+                document.getElementById("gridBtn");
+
+            const listBtn =
+                document.getElementById("listBtn");
+
+            if (gridView) {
+                gridView.style.display =
+                    v === "grid"
+                        ? "grid"
+                        : "none";
+            }
+
+            if (listView) {
+                listView.style.display =
+                    v === "list"
+                        ? "flex"
+                        : "none";
+            }
+
+            if (gridBtn) {
+                gridBtn.classList.toggle(
+                    "active",
+                    v === "grid"
+                );
+            }
+
+            if (listBtn) {
+                listBtn.classList.toggle(
+                    "active",
+                    v === "list"
+                );
+            }
+        }
+
+        // ========== FAV ==========
+        function toggleFav(id) {
+            if (favourites.has(id)) {
+                favourites.delete(id);
+            } else {
+                favourites.add(id);
+            }
+
+            renderBeneficiaries();
+        }
+
+        // ========== SEND ==========
+        function sendTo(id) {
+            const b = beneficiaries.find(
+                x => x.id === id
+            );
+
+            if (b) {
+                window.location.href =
+                    `transfer.html?acc=${b.acc}&name=` +
+                    encodeURIComponent(b.name);
+            }
+        }
+
+        // ========== ADD MODAL ==========
+        function openAddModal() {
+            const modalTitle =
+                document.getElementById("modalTitle");
+
+            const inputName =
+                document.getElementById("inputName");
+
+            const inputAcc =
+                document.getElementById("inputAcc");
+
+            const inputBank =
+                document.getElementById("inputBank");
+
+            const errName =
+                document.getElementById("errName");
+
+            const errAcc =
+                document.getElementById("errAcc");
+
+            const addModal =
+                document.getElementById("addModal");
+
+            if (modalTitle) {
+                modalTitle.textContent =
+                    "Add Beneficiary";
+            }
+
+            if (inputName) {
+                inputName.value = "";
+            }
+
+            if (inputAcc) {
+                inputAcc.value = "";
+            }
+
+            if (inputBank) {
+                inputBank.value =
+                    "Winners Bank";
+            }
+
+            if (errName) {
+                errName.textContent = "";
+            }
+
+            if (errAcc) {
+                errAcc.textContent = "";
+            }
+
+            if (addModal) {
+                addModal.classList.add("open");
+            }
+        }
+
+        // ========== CLOSE MODAL ==========
+        function closeModal(id) {
+            const modal =
+                document.getElementById(id);
+
+            if (modal) {
+                modal.classList.remove("open");
+            }
+        }
+
+        function closeOnOverlay(e, id) {
+            const modal =
+                document.getElementById(id);
+
+            if (modal && e.target === modal) {
+                closeModal(id);
+            }
+        }
+
+        // ========== THEME ==========
+        function toggleTheme() {
+            document.body.classList.toggle(
+                "dark-theme"
+            );
+
+            const light =
+                !document.body.classList.contains(
+                    "dark-theme"
+                );
+
+            const lightIcon =
+                document.getElementById("lightIcon");
+
+            const darkIcon =
+                document.getElementById("darkIcon");
+
+            if (lightIcon) {
+                lightIcon.classList.toggle(
+                    "active",
+                    light
+                );
+            }
+
+            if (darkIcon) {
+                darkIcon.classList.toggle(
+                    "active",
+                    !light
+                );
+            }
+        }
+
+        // ========== SIDEBAR ==========
+        function toggleSidebar() {
+            const sidebar =
+                document.getElementById("sidebar");
+
+            if (sidebar) {
+                sidebar.classList.toggle("open");
+            }
+        }
+
+        // ========== SEARCH ==========
+        const navbarSearch =
+            document.querySelector(
+                ".search-bar input"
+            );
+
+        if (
+            navbarSearch instanceof
+            HTMLInputElement
+        ) {
+            const searchDropdown =
+                document.createElement("div");
+
+            searchDropdown.className =
+                "search-dropdown";
+
+            searchDropdown.style.cssText = `
+          position:absolute;
+          top:100%;
+          left:0;
+          right:0;
+          background:white;
+          border-radius:10px;
+          box-shadow:0 4px 20px rgba(0,0,0,0.15);
+          z-index:1000;
+          display:none;
+          max-height:300px;
+          overflow-y:auto;
+        `;
+
+            const searchBarContainer =
+                document.querySelector(
+                    ".search-bar"
+                );
+
+            if (searchBarContainer) {
+                searchBarContainer.style.position =
+                    "relative";
+
+                searchBarContainer.appendChild(
+                    searchDropdown
+                );
+            }
+
+            const searchItems = [
+                {
+                    name: "Dashboard",
+                    icon: "dashboard",
+                    url: "index.html",
+                },
+                {
+                    name: "Transfer Money",
+                    icon: "send",
+                    url: "transfer.html",
+                },
+                {
+                    name: "Beneficiaries",
+                    icon: "group",
+                    url: "Beneficiaries.HTML",
+                },
+            ];
+
+            navbarSearch.addEventListener(
+                "input",
+                function (e) {
+                    const term =
+                        e.target.value
+                            .toLowerCase()
+                            .trim();
+
+                    if (!term) {
+                        searchDropdown.style.display =
+                            "none";
+                        return;
+                    }
+
+                    const filtered =
+                        searchItems.filter(item =>
+                            item.name
+                                .toLowerCase()
+                                .includes(term)
+                        );
+
+                    if (!filtered.length) {
+                        searchDropdown.innerHTML = `
+                <div style="padding:12px;color:#888;">
+                  No results found
+                </div>
+              `;
+                    } else {
+                        searchDropdown.innerHTML =
+                            filtered
+                                .map(
+                                    item => `
+                  <div
+                    class="search-item"
+                    data-url="${item.url}"
+                    style="
+                      display:flex;
+                      align-items:center;
+                      gap:12px;
+                      padding:12px 16px;
+                      cursor:pointer;
+                    "
+                  >
+                    <span class="material-icons-sharp">
+                      ${item.icon}
+                    </span>
+
+                    <span>
+                      ${item.name}
+                    </span>
+                  </div>
+                `
+                                )
+                                .join("");
+
+                        document
+                            .querySelectorAll(
+                                ".search-item"
+                            )
+                            .forEach(el => {
+                                el.onclick = () => {
+                                    const url =
+                                        el.dataset.url || "#";
+
+                                    window.location.href =
+                                        url;
+                                };
+                            });
+                    }
+
+                    searchDropdown.style.display =
+                        "block";
+                }
+            );
+
+            document.addEventListener(
+                "click",
+                e => {
+                    if (
+                        searchBarContainer &&
+                        e.target instanceof Node &&
+                        !searchBarContainer.contains(
+                            e.target
+                        )
+                    ) {
+                        searchDropdown.style.display =
+                            "none";
+                    }
+                }
+            );
+        }
+
+        // ========== INIT ==========
+        loadUserInfo();
+        loadBeneficiaries();
     </script>
     <script>
-    const username = localStorage.getItem("fullName");
+        const username = localStorage.getItem("fullName");
 
-    if (username) {
-        document.getElementById("username").innerText = username;
-}
-// ========== SAVE BENEFICIARY ==========
-async function saveBeneficiary() {
-    const inputName = document.getElementById("inputName");
-    const inputAcc = document.getElementById("inputAcc");
-    const inputBank = document.getElementById("inputBank");
-    const errName = document.getElementById("errName");
-    const errAcc = document.getElementById("errAcc");
-    const btnSave = document.getElementById("btnSave");
+        if (username) {
+            document.getElementById("username").innerText = username;
+        }
+        // ========== SAVE BENEFICIARY ==========
+        async function saveBeneficiary() {
+            const inputName = document.getElementById("inputName");
+            const inputAcc = document.getElementById("inputAcc");
+            const inputBank = document.getElementById("inputBank");
+            const errName = document.getElementById("errName");
+            const errAcc = document.getElementById("errAcc");
+            const btnSave = document.getElementById("btnSave");
 
-    const name = inputName?.value?.trim() || "";
-    const acc = inputAcc?.value?.trim() || "";
-    const bank = inputBank?.value || "Winners Bank";
+            const name = inputName?.value?.trim() || "";
+            const acc = inputAcc?.value?.trim() || "";
+            const bank = inputBank?.value || "Winners Bank";
 
-    let valid = true;
+            let valid = true;
 
-    if (errName) errName.textContent = "";
-    if (errAcc) errAcc.textContent = "";
+            if (errName) errName.textContent = "";
+            if (errAcc) errAcc.textContent = "";
 
-    if (!name) {
-        if (errName) errName.textContent = "Full name is required";
-        valid = false;
-    }
+            if (!name) {
+                if (errName) errName.textContent = "Full name is required";
+                valid = false;
+            }
 
-    if (!acc) {
-        if (errAcc) errAcc.textContent = "Account number is required";
-        valid = false;
-    }
+            if (!acc) {
+                if (errAcc) errAcc.textContent = "Account number is required";
+                valid = false;
+            }
 
-    if (!valid) return;
+            if (!valid) return;
 
-    const token = getToken();
-    if (!token) {
-        redirectLogin();
-        return;
-    }
+            const token = getToken();
+            if (!token) {
+                redirectLogin();
+                return;
+            }
 
-    if (btnSave) {
-        btnSave.disabled = true;
-        btnSave.textContent = "Saving...";
-    }
+            if (btnSave) {
+                btnSave.disabled = true;
+                btnSave.textContent = "Saving...";
+            }
 
-    try {
-        const res = await fetch("/api/Banking/beneficiaries", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-                name: name,
-                accountNumber: acc,
-                bankName: bank,
-            }),
-        });
+            try {
+                const res = await fetch("/api/Banking/beneficiaries", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        accountNumber: acc,
+                        bankName: bank,
+                    }),
+                });
 
-        if (res.status === 401) {
-            redirectLogin();
-            return;
+                if (res.status === 401) {
+                    redirectLogin();
+                    return;
+                }
+
+                if (!res.ok) {
+                    const errText = await res.text().catch(() => "");
+                    throw new Error(errText || "Failed to save beneficiary");
+                }
+
+                closeModal("addModal");
+                showToast("Beneficiary added successfully");
+                await loadBeneficiaries();
+            } catch (error) {
+                console.error(error);
+                if (errAcc) errAcc.textContent = "Failed to save. Try again.";
+                showToast("Failed to add beneficiary", false);
+            } finally {
+                if (btnSave) {
+                    btnSave.disabled = false;
+                    btnSave.textContent = "Save Beneficiary";
+                }
+            }
         }
 
-        if (!res.ok) {
-            const errText = await res.text().catch(() => "");
-            throw new Error(errText || "Failed to save beneficiary");
+        // ========== DELETE BENEFICIARY ==========
+        function deleteBene(id) {
+            deleteTargetId = id;
+            const deleteModal = document.getElementById("deleteModal");
+            if (deleteModal) deleteModal.classList.add("open");
         }
 
-        closeModal("addModal");
-        showToast("Beneficiary added successfully");
-        await loadBeneficiaries();
-    } catch (error) {
-        console.error(error);
-        if (errAcc) errAcc.textContent = "Failed to save. Try again.";
-        showToast("Failed to add beneficiary", false);
-    } finally {
-        if (btnSave) {
-            btnSave.disabled = false;
-            btnSave.textContent = "Save Beneficiary";
+        async function confirmDelete() {
+            if (deleteTargetId == null) return;
+
+            const token = getToken();
+            if (!token) {
+                redirectLogin();
+                return;
+            }
+
+            try {
+                const res = await fetch(`/api/Banking/beneficiaries/${deleteTargetId}`, {
+                    method: "DELETE",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (res.status === 401) {
+                    redirectLogin();
+                    return;
+                }
+
+                if (!res.ok) {
+                    throw new Error("Failed to delete beneficiary");
+                }
+
+                closeModal("deleteModal");
+                showToast("Beneficiary deleted");
+                await loadBeneficiaries();
+            } catch (error) {
+                console.error(error);
+                showToast("Failed to delete beneficiary", false);
+            } finally {
+                deleteTargetId = null;
+            }
         }
-    }
-}
-
-// ========== DELETE BENEFICIARY ==========
-function deleteBene(id) {
-    deleteTargetId = id;
-    const deleteModal = document.getElementById("deleteModal");
-    if (deleteModal) deleteModal.classList.add("open");
-}
-
-async function confirmDelete() {
-    if (deleteTargetId == null) return;
-
-    const token = getToken();
-    if (!token) {
-        redirectLogin();
-        return;
-    }
-
-    try {
-        const res = await fetch(`/api/Banking/beneficiaries/${deleteTargetId}`, {
-            method: "DELETE",
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-
-        if (res.status === 401) {
-            redirectLogin();
-            return;
-        }
-
-        if (!res.ok) {
-            throw new Error("Failed to delete beneficiary");
-        }
-
-        closeModal("deleteModal");
-        showToast("Beneficiary deleted");
-        await loadBeneficiaries();
-    } catch (error) {
-        console.error(error);
-        showToast("Failed to delete beneficiary", false);
-    } finally {
-        deleteTargetId = null;
-    }
-}
-</script>
+    </script>
+    <script src="js/theme.js"></script>
 </body>
 </html>

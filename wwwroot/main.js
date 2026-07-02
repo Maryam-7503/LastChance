@@ -1,29 +1,154 @@
 // ========== CHART ==========
-const chart = document.querySelector("#chart").getContext('2d');
 
-new Chart(chart, {
-    type: 'line',
-    data: {
-        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov"],
-        datasets: [
-            {
-                label: "BTC",
-                data: [29374, 33537, 49631, 59095, 36684, 33572, 39974, 48847, 48116, 61004, 52000],
-                borderColor: "red",
-                borderWidth: 2
+
+let chart;
+
+async function loadBillsChart() {
+
+    try {
+
+        const response = await fetch("/api/Banking/transactions", {
+            method: "GET",
+            headers: getAuthHeaders()
+        });
+
+        if (!response.ok) return;
+
+        const transactions = await response.json();
+
+        const bills = transactions.filter(t => t.type === "BillPayment");
+
+        const months = [
+            "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+        ];
+
+        const electricity = new Array(12).fill(0);
+        const water = new Array(12).fill(0);
+        const internet = new Array(12).fill(0);
+        const gas = new Array(12).fill(0);
+        const phone = new Array(12).fill(0);
+        const tv = new Array(12).fill(0);
+
+        bills.forEach(bill => {
+
+            const month = new Date(bill.createdAt).getMonth();
+
+            const description = (bill.description || "").toLowerCase();
+
+            if (description.includes("electricity"))
+                electricity[month] += bill.amount;
+
+            else if (description.includes("water"))
+                water[month] += bill.amount;
+
+            else if (description.includes("internet"))
+                internet[month] += bill.amount;
+
+            else if (description.includes("gas"))
+                gas[month] += bill.amount;
+
+            else if (description.includes("phone"))
+                phone[month] += bill.amount;
+
+            else if (description.includes("tv"))
+                tv[month] += bill.amount;
+
+        });
+
+        const ctx = document.getElementById("chart").getContext("2d");
+
+        if (chart)
+            chart.destroy();
+
+        chart = new Chart(ctx, {
+
+            type: "bar",
+
+            data: {
+
+                labels: months,
+
+                datasets: [
+
+                    {
+                        label: "Electricity",
+                        data: electricity,
+                        backgroundColor: "#f39c12"
+                    },
+
+                    {
+                        label: "Water",
+                        data: water,
+                        backgroundColor: "#3498db"
+                    },
+
+                    {
+                        label: "Internet",
+                        data: internet,
+                        backgroundColor: "#2ecc71"
+                    },
+
+                    {
+                        label: "Gas",
+                        data: gas,
+                        backgroundColor: "#e74c3c"
+                    },
+
+                    {
+                        label: "Phone",
+                        data: phone,
+                        backgroundColor: "#9b59b6"
+                    },
+
+                    {
+                        label: "TV",
+                        data: tv,
+                        backgroundColor: "#1abc9c"
+                    }
+
+                ]
+
             },
-            {
-                label: "ETH",
-                data: [31500, 41000, 28000, 26000, 46000, 32698, 50000, 30000, 18656, 36844, 42000],
-                borderColor: "blue",
-                borderWidth: 2
+
+            options: {
+
+                responsive: true,
+
+                plugins: {
+
+                    legend: {
+                        position: "top"
+                    },
+
+                    title: {
+                        display: true,
+                        text: "Monthly Bills Payments"
+                    }
+
+                },
+
+                scales: {
+
+                    y: {
+                        beginAtZero: true
+                    }
+
+                }
+
             }
-        ]
-    },
-    options: {
-        responsive: true
+
+        });
+
     }
-});
+
+    catch (err) {
+
+        console.error("Bills Chart Error:", err);
+
+    }
+
+}
 
 // ========== SMART SEARCH ==========
 const searchInput = document.querySelector(".search-bar input");
@@ -119,6 +244,76 @@ if (searchInput) {
     });
 }
 
+// ========== card ==========  
+async function loadMonthlyStatistics() {
+
+    try {
+
+        const response = await fetch("/api/Banking/transactions", {
+            method: "GET",
+            headers: getAuthHeaders()
+        });
+
+        if (!response.ok) return;
+
+        const transactions = await response.json();
+
+        const now = new Date();
+
+        let income = 0;
+        let expenses = 0;
+
+        let incomeCount = 0;
+        let expenseCount = 0;
+
+        transactions.forEach(t => {
+
+            const date = new Date(t.createdAt);
+
+            if (
+                date.getMonth() === now.getMonth() &&
+                date.getFullYear() === now.getFullYear()
+            ) {
+
+                if (t.isOutgoing) {
+
+                    // فلوس خرجت
+                    expenses += t.amount;
+                    expenseCount++;
+
+                } else {
+
+                    // فلوس دخلت
+                    income += t.amount;
+                    incomeCount++;
+
+                }
+
+            }
+
+        });
+
+        document.getElementById("monthlyIncome").textContent =
+            "$" + income.toLocaleString();
+
+        document.getElementById("monthlyExpenses").textContent =
+            "$" + expenses.toLocaleString();
+
+        document.getElementById("incomeCount").textContent =
+            incomeCount;
+
+        document.getElementById("expenseCount").textContent =
+            expenseCount;
+
+    }
+
+    catch (err) {
+
+        console.log(err);
+
+    }
+
+}
 // ========== AUTH HELPER ==========
 function getToken() {
     return localStorage.getItem("token");
@@ -206,7 +401,7 @@ async function loadRecentTransactions() {
 
         // Show last 5 transactions
         transactions.slice(0, 5).forEach(tx => {
-            const isCredit = tx.type === "Deposit";
+            const isCredit = !tx.isOutgoing;
             const icon = tx.type === "Transfer" ? "send" :
                 tx.type === "BillPayment" ? "payment" : "account_balance";
             const amountColor = isCredit ? "success" : "danger";
@@ -296,18 +491,15 @@ if (menuBtn && closeBtn && sidebar) {
 }
 
 // ========== THEME TOGGLE ==========
-const themeBtn = document.querySelector('.theme-btn');
-if (themeBtn) {
-    themeBtn.addEventListener('click', () => {
-        document.body.classList.toggle('dark-theme');
-        themeBtn.querySelector('span:first-child').classList.toggle('active');
-        themeBtn.querySelector('span:last-child').classList.toggle('active');
-    });
-}
+
 
 // ========== INIT ==========
 document.addEventListener("DOMContentLoaded", () => {
+
     loadBalance();
     loadRecentTransactions();
     loadDashboardData();
+    loadBillsChart();
+    loadMonthlyStatistics();
+
 });

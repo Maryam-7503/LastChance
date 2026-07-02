@@ -246,6 +246,7 @@ namespace WebApplication1.Controllers
             }
 
             user.ResetPasswordToken = _passwordService.GenerateResetToken();
+            Console.WriteLine("Generated Token: " + user.ResetPasswordToken);
             user.ResetPasswordTokenExpiry = DateTime.UtcNow.AddHours(1);
 
             await _context.SaveChangesAsync();

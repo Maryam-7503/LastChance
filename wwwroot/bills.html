@@ -512,14 +512,14 @@
                 <div class="search-dropdown" id="searchDropdown"></div>
             </div>
             <div class="profile-area">
-                <div class="theme-btn" onclick="toggleTheme()">
+                <div class="theme-btn">
                     <span class="material-icons-sharp active" id="lightIcon">light_mode</span>
                     <span class="material-icons-sharp" id="darkIcon">dark_mode</span>
                 </div>
                 <div class="profile">
-                    
+
                     <h3 id="username"></h3>
-                   
+
                 </div>
                 <button id="menu-btn" onclick="toggleSidebar()"><span class="material-icons-sharp">menu</span></button>
             </div>
@@ -637,233 +637,227 @@
     </main>
 
     <script>
-      // ========== AUTH ==========
-      const token = localStorage.getItem("token");
-      if (!token) window.location.href = "login.html";
+        // ========== AUTH ==========
+        const token = localStorage.getItem("token");
+        if (!token) window.location.href = "login.html";
 
-      const authHeaders = {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      };
+        const authHeaders = {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+        };
 
-      let selectedBiller = "Electricity";
+        let selectedBiller = "Electricity";
 
-      // ========== BILLER SELECTION ==========
-      document.querySelectorAll(".biller-icon").forEach(icon => {
-        icon.addEventListener("click", function () {
-          document.querySelectorAll(".biller-icon").forEach(i => i.classList.remove("active"));
-          this.classList.add("active");
-          selectedBiller = this.getAttribute("data-biller");
-        });
-      });
-
-      // ========== LOAD USER INFO FROM API ==========
-      async function loadUserInfo() {
-        try {
-          const res = await fetch("/api/Auth/me", { headers: authHeaders });
-          if (res.status === 401) { localStorage.removeItem("token"); window.location.href = "login.html"; return; }
-          if (!res.ok) return;
-          const user = await res.json();
-          const name = user.username || user.email || "User";
-          document.getElementById("profileName").textContent = name;
-          document.getElementById("profileInitials").textContent = name.slice(0, 2).toUpperCase();
-        } catch (err) { console.error(err); }
-      }
-
-      // ========== LOAD BALANCE ==========
-      async function loadBalance() {
-        try {
-          const res = await fetch("/api/Banking/balance", { headers: authHeaders });
-          if (res.status === 401) { localStorage.removeItem("token"); window.location.href = "login.html"; return; }
-          if (!res.ok) return;
-          const data = await res.json();
-          document.getElementById("availableBalance").textContent = `EGP ${data.balance.toLocaleString()}`;
-        } catch (err) { console.error(err); }
-      }
-
-      // ========== LOAD RECENT BILL PAYMENTS ==========
-      async function loadRecentBills() {
-        try {
-          const res = await fetch("/api/Banking/transactions", { headers: authHeaders });
-          if (!res.ok) return;
-          const data = await res.json();
-
-          // Filter only BillPayment type, take last 5
-          const bills = data
-            .filter(t => t.type === "BillPayment")
-            .slice(0, 5);
-
-          const container = document.getElementById("recentBills");
-
-          if (bills.length === 0) {
-            container.innerHTML = `<p style="color:var(--color-gray-light);font-size:0.8rem;text-align:center;padding:1rem 0;">No bill payments yet.</p>`;
-            return;
-          }
-
-          const billerIcons = {
-            Electricity: "bolt",
-            Water:       "water_drop",
-            Internet:    "wifi",
-            Gas:         "local_fire_department",
-            Phone:       "smartphone",
-            TV:          "live_tv"
-          };
-
-          container.innerHTML = bills.map(bill => {
-            const date = new Date(bill.createdAt).toLocaleDateString("en-GB", {
-              day: "2-digit", month: "short", year: "numeric"
+        // ========== BILLER SELECTION ==========
+        document.querySelectorAll(".biller-icon").forEach(icon => {
+            icon.addEventListener("click", function () {
+                document.querySelectorAll(".biller-icon").forEach(i => i.classList.remove("active"));
+                this.classList.add("active");
+                selectedBiller = this.getAttribute("data-biller");
             });
-            // Extract biller type from description: "Pay Electricity bill - ELEC123"
-            const descParts = (bill.description || "").split(" ");
-            const billerType = descParts[1] || "Bill";
-            const icon = billerIcons[billerType] || "payment";
-            const ref = bill.referenceNumber || `#${bill.id}`;
+        });
 
-            return `
-              <div class="recent-item">
-                <span class="material-icons-sharp" style="font-size:1.6rem;color:var(--color-primary);">${icon}</span>
-                <div style="flex:1;">
-                  <strong style="font-size:0.88rem;">${bill.description || "Bill Payment"}</strong><br/>
-                  <small style="color:var(--color-gray-light);">${date} · ${ref}</small>
-                </div>
-                <strong style="color:var(--color-danger);white-space:nowrap;">−EGP ${bill.amount.toLocaleString()}</strong>
-              </div>
-            `;
-          }).join("");
-
-        } catch (err) { console.error(err); }
-      }
-
-      // ========== PAY BILL ==========
-      async function payBill() {
-        const billNumber = document.getElementById("billNumber").value.trim();
-        const amount     = parseFloat(document.getElementById("amountInput").value);
-
-        // Hide previous alerts
-        document.getElementById("successAlert").classList.remove("show");
-        document.getElementById("errorAlert").classList.remove("show");
-
-        // Validate
-        if (!billNumber) {
-          document.getElementById("errorMsg").textContent = "Please enter a bill number.";
-          document.getElementById("errorAlert").classList.add("show");
-          return;
-        }
-        if (!amount || amount <= 0) {
-          document.getElementById("errorMsg").textContent = "Please enter a valid amount greater than 0.";
-          document.getElementById("errorAlert").classList.add("show");
-          return;
+        // ========== LOAD USER INFO FROM API ==========
+        async function loadUserInfo() {
+            try {
+                const res = await fetch("/api/Auth/me", { headers: authHeaders });
+                if (res.status === 401) { localStorage.removeItem("token"); window.location.href = "login.html"; return; }
+                if (!res.ok) return;
+                const user = await res.json();
+                const name = user.username || user.email || "User";
+                document.getElementById("profileName").textContent = name;
+                document.getElementById("profileInitials").textContent = name.slice(0, 2).toUpperCase();
+            } catch (err) { console.error(err); }
         }
 
-        const btn = document.getElementById("payBtn");
-        btn.disabled = true;
-        btn.innerHTML = '<span class="material-icons-sharp" style="vertical-align:middle;font-size:1rem;animation:spin 0.7s linear infinite;display:inline-block;">autorenew</span> Processing...';
-
-        try {
-          const res = await fetch("/api/Banking/pay-bill", {
-            method: "POST",
-            headers: authHeaders,
-            body: JSON.stringify({
-              billType:   selectedBiller,
-              billNumber: billNumber,
-              amount:     amount
-            })
-          });
-
-          const data = await res.json().catch(() => ({}));
-
-          if (res.ok) {
-            document.getElementById("successMsg").textContent =
-              `${selectedBiller} bill paid successfully! Amount: EGP ${amount.toFixed(2)}`;
-            document.getElementById("successAlert").classList.add("show");
-            document.getElementById("billNumber").value  = "";
-            document.getElementById("amountInput").value = "";
-            // Refresh balance and recent list
-            loadBalance();
-            loadRecentBills();
-          } else {
-            document.getElementById("errorMsg").textContent =
-              data.message || "Payment failed. Please check your balance and try again.";
-            document.getElementById("errorAlert").classList.add("show");
-          }
-        } catch (err) {
-          document.getElementById("errorMsg").textContent = "Network error. Please try again.";
-          document.getElementById("errorAlert").classList.add("show");
-        } finally {
-          btn.disabled = false;
-          btn.innerHTML = '<span class="material-icons-sharp" style="vertical-align:middle;font-size:1rem;">payment</span> Pay Bill';
+        // ========== LOAD BALANCE ==========
+        async function loadBalance() {
+            try {
+                const res = await fetch("/api/Banking/balance", { headers: authHeaders });
+                if (res.status === 401) { localStorage.removeItem("token"); window.location.href = "login.html"; return; }
+                if (!res.ok) return;
+                const data = await res.json();
+                document.getElementById("availableBalance").textContent = `EGP ${data.balance.toLocaleString()}`;
+            } catch (err) { console.error(err); }
         }
-      }
 
-      // ========== NAVBAR SEARCH ==========
-      const navSearchInput = document.getElementById("navSearchInput");
-      const searchDropdown = document.getElementById("searchDropdown");
+        // ========== LOAD RECENT BILL PAYMENTS ==========
+        async function loadRecentBills() {
+            try {
+                const res = await fetch("/api/Banking/transactions", { headers: authHeaders });
+                if (!res.ok) return;
+                const data = await res.json();
 
-      const searchItems = [
-        { name: "Dashboard",           icon: "dashboard",            url: "index.html" },
-        { name: "Transfer Money",      icon: "send",                 url: "transfer.html" },
-        { name: "Transfer History",    icon: "history",              url: "transfer_his.html" },
-        { name: "Beneficiaries",       icon: "group",                url: "Beneficiaries.HTML" },
-        { name: "Bills Payment",       icon: "payment",              url: "bills.html" },
-        { name: "Admin Panel",         icon: "admin_panel_settings", url: "adminmonitor.html" },
-        { name: "Settings & Security", icon: "settings",             url: "settings.html" },
-        { name: "Support",             icon: "help_center",          url: "support.html" },
-        { name: "Logout",              icon: "logout",               url: "logout.html" }
-      ];
+                // Filter only BillPayment type, take last 5
+                const bills = data
+                    .filter(t => t.type === "BillPayment")
+                    .slice(0, 5);
 
-      navSearchInput.addEventListener("input", function () {
-        const term = this.value.toLowerCase().trim();
-        if (!term) { searchDropdown.style.display = "none"; return; }
+                const container = document.getElementById("recentBills");
 
-        const filtered = searchItems.filter(i => i.name.toLowerCase().includes(term));
-        if (!filtered.length) {
-          searchDropdown.innerHTML = `<div style="padding:12px;color:#888;font-size:0.82rem;">No results found</div>`;
-        } else {
-          searchDropdown.innerHTML = filtered.map(i => `
-            <div class="search-item" data-url="${i.url}">
-              <span class="material-icons-sharp" style="color:#24086d;font-size:1.1rem;">${i.icon}</span>
-              <span>${i.name}</span>
-            </div>`).join("");
-          document.querySelectorAll(".search-item").forEach(el => {
-            el.onclick = () => window.location.href = el.dataset.url;
-          });
+                if (bills.length === 0) {
+                    container.innerHTML = `<p style="color:var(--color-gray-light);font-size:0.8rem;text-align:center;padding:1rem 0;">No bill payments yet.</p>`;
+                    return;
+                }
+
+                const billerIcons = {
+                    Electricity: "bolt",
+                    Water: "water_drop",
+                    Internet: "wifi",
+                    Gas: "local_fire_department",
+                    Phone: "smartphone",
+                    TV: "live_tv"
+                };
+
+                container.innerHTML = bills.map(bill => {
+                    const date = new Date(bill.createdAt).toLocaleDateString("en-GB", {
+                        day: "2-digit", month: "short", year: "numeric"
+                    });
+                    // Extract biller type from description: "Pay Electricity bill - ELEC123"
+                    const descParts = (bill.description || "").split(" ");
+                    const billerType = descParts[1] || "Bill";
+                    const icon = billerIcons[billerType] || "payment";
+                    const ref = bill.referenceNumber || `#${bill.id}`;
+
+                    return `
+                  <div class="recent-item">
+                    <span class="material-icons-sharp" style="font-size:1.6rem;color:var(--color-primary);">${icon}</span>
+                    <div style="flex:1;">
+                      <strong style="font-size:0.88rem;">${bill.description || "Bill Payment"}</strong><br/>
+                      <small style="color:var(--color-gray-light);">${date} · ${ref}</small>
+                    </div>
+                    <strong style="color:var(--color-danger);white-space:nowrap;">−EGP ${bill.amount.toLocaleString()}</strong>
+                  </div>
+                `;
+                }).join("");
+
+            } catch (err) { console.error(err); }
         }
-        searchDropdown.style.display = "block";
-      });
 
-      document.addEventListener("click", e => {
-        if (!document.querySelector(".search-bar").contains(e.target))
-          searchDropdown.style.display = "none";
-      });
+        // ========== PAY BILL ==========
+        async function payBill() {
+            const billNumber = document.getElementById("billNumber").value.trim();
+            const amount = parseFloat(document.getElementById("amountInput").value);
 
-      // ========== THEME & SIDEBAR ==========
-      function toggleTheme() {
-        document.body.classList.toggle("dark-theme");
-        const light = !document.body.classList.contains("dark-theme");
-        document.getElementById("lightIcon").classList.toggle("active", light);
-        document.getElementById("darkIcon").classList.toggle("active", !light);
-      }
+            // Hide previous alerts
+            document.getElementById("successAlert").classList.remove("show");
+            document.getElementById("errorAlert").classList.remove("show");
 
-      function toggleSidebar() {
-        document.getElementById("sidebar").classList.toggle("open");
-      }
+            // Validate
+            if (!billNumber) {
+                document.getElementById("errorMsg").textContent = "Please enter a bill number.";
+                document.getElementById("errorAlert").classList.add("show");
+                return;
+            }
+            if (!amount || amount <= 0) {
+                document.getElementById("errorMsg").textContent = "Please enter a valid amount greater than 0.";
+                document.getElementById("errorAlert").classList.add("show");
+                return;
+            }
 
-      // ========== SPINNER CSS ==========
-      const style = document.createElement("style");
-      style.textContent = `@keyframes spin { to { transform: rotate(360deg); } }`;
-      document.head.appendChild(style);
+            const btn = document.getElementById("payBtn");
+            btn.disabled = true;
+            btn.innerHTML = '<span class="material-icons-sharp" style="vertical-align:middle;font-size:1rem;animation:spin 0.7s linear infinite;display:inline-block;">autorenew</span> Processing...';
 
-      // ========== INIT ==========
-      loadUserInfo();
-      loadBalance();
-      loadRecentBills();
+            try {
+                const res = await fetch("/api/Banking/pay-bill", {
+                    method: "POST",
+                    headers: authHeaders,
+                    body: JSON.stringify({
+                        billType: selectedBiller,
+                        billNumber: billNumber,
+                        amount: amount
+                    })
+                });
+
+                const data = await res.json().catch(() => ({}));
+
+                if (res.ok) {
+                    document.getElementById("successMsg").textContent =
+                        `${selectedBiller} bill paid successfully! Amount: EGP ${amount.toFixed(2)}`;
+                    document.getElementById("successAlert").classList.add("show");
+                    document.getElementById("billNumber").value = "";
+                    document.getElementById("amountInput").value = "";
+                    // Refresh balance and recent list
+                    loadBalance();
+                    loadRecentBills();
+                } else {
+                    document.getElementById("errorMsg").textContent =
+                        data.message || "Payment failed. Please check your balance and try again.";
+                    document.getElementById("errorAlert").classList.add("show");
+                }
+            } catch (err) {
+                document.getElementById("errorMsg").textContent = "Network error. Please try again.";
+                document.getElementById("errorAlert").classList.add("show");
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<span class="material-icons-sharp" style="vertical-align:middle;font-size:1rem;">payment</span> Pay Bill';
+            }
+        }
+
+        // ========== NAVBAR SEARCH ==========
+        const navSearchInput = document.getElementById("navSearchInput");
+        const searchDropdown = document.getElementById("searchDropdown");
+
+        const searchItems = [
+            { name: "Dashboard", icon: "dashboard", url: "index.html" },
+            { name: "Transfer Money", icon: "send", url: "transfer.html" },
+            { name: "Transfer History", icon: "history", url: "transfer_his.html" },
+            { name: "Beneficiaries", icon: "group", url: "Beneficiaries.HTML" },
+            { name: "Bills Payment", icon: "payment", url: "bills.html" },
+            { name: "Admin Panel", icon: "admin_panel_settings", url: "adminmonitor.html" },
+            { name: "Settings & Security", icon: "settings", url: "settings.html" },
+            { name: "Support", icon: "help_center", url: "support.html" },
+            { name: "Logout", icon: "logout", url: "logout.html" }
+        ];
+
+        navSearchInput.addEventListener("input", function () {
+            const term = this.value.toLowerCase().trim();
+            if (!term) { searchDropdown.style.display = "none"; return; }
+
+            const filtered = searchItems.filter(i => i.name.toLowerCase().includes(term));
+            if (!filtered.length) {
+                searchDropdown.innerHTML = `<div style="padding:12px;color:#888;font-size:0.82rem;">No results found</div>`;
+            } else {
+                searchDropdown.innerHTML = filtered.map(i => `
+                <div class="search-item" data-url="${i.url}">
+                  <span class="material-icons-sharp" style="color:#24086d;font-size:1.1rem;">${i.icon}</span>
+                  <span>${i.name}</span>
+                </div>`).join("");
+                document.querySelectorAll(".search-item").forEach(el => {
+                    el.onclick = () => window.location.href = el.dataset.url;
+                });
+            }
+            searchDropdown.style.display = "block";
+        });
+
+        document.addEventListener("click", e => {
+            if (!document.querySelector(".search-bar").contains(e.target))
+                searchDropdown.style.display = "none";
+        });
+
+        // ========== THEME & SIDEBAR ==========
+       
+
+        
+
+        // ========== SPINNER CSS ==========
+        const style = document.createElement("style");
+        style.textContent = `@keyframes spin { to { transform: rotate(360deg); } }`;
+        document.head.appendChild(style);
+
+        // ========== INIT ==========
+        loadUserInfo();
+        loadBalance();
+        loadRecentBills();
     </script>
     <script>
-    const username = localStorage.getItem("fullName");
+        const username = localStorage.getItem("fullName");
 
-    if (username) {
-        document.getElementById("username").innerText = username;
-    }
-</script>
+        if (username) {
+            document.getElementById("username").innerText = username;
+        }
+    </script>
+    <script src="js/theme.js"></script>
 </body>
 </html>

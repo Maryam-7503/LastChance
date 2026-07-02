@@ -843,7 +843,7 @@
             </div>
 
             <div class="profile-area">
-                <div class="theme-btn" onclick="toggleTheme()">
+                <div class="theme-btn">
                     <span class="material-icons-sharp active" id="lightIcon">light_mode</span>
                     <span class="material-icons-sharp" id="darkIcon">dark_mode</span>
                 </div>
@@ -1059,6 +1059,7 @@
     <script>
         let allTransactions = [];
         let currentPage = 1;
+        let userAccountId = 0;
         let filtered = [];
         const PER_PAGE = 10;
 
@@ -1089,6 +1090,14 @@
             if (!token) { redirectLogin(); return; }
 
             try {
+                const accountResponse = await fetch("/api/Banking/balance", {
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
+
+                const account = await accountResponse.json();
+                userAccountId = account.id;
                 const response = await fetch("/api/Banking/transactions", {
                     headers: { "Authorization": `Bearer ${token}` }
                 });
@@ -1105,20 +1114,27 @@
                     "failed": "failed"
                 };
 
-                allTransactions = data.map(tx => {
-                    const isOut = tx.type === "Transfer" || tx.type === "BillPayment";
-                    return {
-                        id: tx.id,
-                        referenceNumber: tx.referenceNumber || `TXN${tx.id}`,
-                        type: isOut ? "out" : "in",
-                        amount: tx.amount,
-                        status: statusMap[tx.status?.toLowerCase()] || "pending",
-                        description: tx.description,
-                        toAccountNumber: tx.toAccountNumber,
-                        date: new Date(tx.createdAt).toLocaleString(),
-                        createdAt: new Date(tx.createdAt)
-                    };
-                });
+                allTransactions = data.map(tx => ({
+
+                    id: tx.id,
+
+                    referenceNumber: tx.referenceNumber,
+
+                    type: tx.isOutgoing ? "out" : "in",
+
+                    amount: tx.amount,
+
+                    status: statusMap[tx.status.toLowerCase()] || "pending",
+
+                    description: tx.description,
+
+                    toAccountNumber: tx.otherAccountNumber,
+
+                    date: new Date(tx.createdAt).toLocaleString(),
+
+                    createdAt: new Date(tx.createdAt)
+
+                }));
 
                 filtered = [...allTransactions];
                 updateStats();
@@ -1127,9 +1143,9 @@
             } catch (error) {
                 console.error("Error loading transactions:", error);
                 document.getElementById("tableBody").innerHTML = `
-                <tr><td colspan="7" style="text-align:center; padding:2rem; color:var(--color-danger);">
-                  ❌ Failed to load transactions. Please try again.
-                </td></tr>`;
+                    <tr><td colspan="7" style="text-align:center; padding:2rem; color:var(--color-danger);">
+                      ❌ Failed to load transactions. Please try again.
+                    </td></tr>`;
             }
         }
 
@@ -1193,55 +1209,55 @@
 
             if (page.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:2rem; color:var(--color-gray-light);">
-                No transactions found.
-              </td></tr>`;
+                    No transactions found.
+                  </td></tr>`;
                 document.getElementById("paginationInfo").textContent = "Showing 0 of 0 transactions";
                 renderPagination();
                 return;
             }
 
             tbody.innerHTML = page.map(tx => `
-              <tr onclick="openModal(${tx.id})">
-                <td>
-                  <div class="tx-cell">
-                    <div class="tx-icon" style="background: var(--color-${tx.type === 'out' ? 'danger' : 'success'}-light); color: var(--color-${tx.type === 'out' ? 'danger' : 'success'});">
-                      <span class="material-icons-sharp" style="font-size:1.1rem;">
-                        ${tx.type === "out" ? "arrow_upward" : "arrow_downward"}
+                  <tr onclick="openModal(${tx.id})">
+                    <td>
+                      <div class="tx-cell">
+                        <div class="tx-icon" style="background: var(--color-${tx.type === 'out' ? 'danger' : 'success'}-light); color: var(--color-${tx.type === 'out' ? 'danger' : 'success'});">
+                          <span class="material-icons-sharp" style="font-size:1.1rem;">
+                            ${tx.type === "out" ? "arrow_upward" : "arrow_downward"}
+                          </span>
+                        </div>
+                        <div>
+                          <div class="tx-name">${tx.description || (tx.type === "out" ? "Transfer Sent" : "Transfer Received")}</div>
+                          <div class="tx-id">${tx.referenceNumber}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td style="color:var(--color-gray-dark); white-space:nowrap;">${tx.date}</td>
+                    <td>
+                      <span style="display:inline-flex;align-items:center;gap:0.3rem;font-size:0.8rem;font-weight:500;
+                        color:${tx.type === "out" ? "var(--color-danger)" : "var(--color-success)"}">
+                        <span class="material-icons-sharp" style="font-size:1rem;">
+                          ${tx.type === "out" ? "arrow_upward" : "arrow_downward"}
+                        </span>
+                        ${tx.type === "out" ? "Sent" : "Received"}
                       </span>
-                    </div>
-                    <div>
-                      <div class="tx-name">${tx.description || (tx.type === "out" ? "Transfer Sent" : "Transfer Received")}</div>
-                      <div class="tx-id">${tx.referenceNumber}</div>
-                    </div>
-                  </div>
-                </td>
-                <td style="color:var(--color-gray-dark); white-space:nowrap;">${tx.date}</td>
-                <td>
-                  <span style="display:inline-flex;align-items:center;gap:0.3rem;font-size:0.8rem;font-weight:500;
-                    color:${tx.type === "out" ? "var(--color-danger)" : "var(--color-success)"}">
-                    <span class="material-icons-sharp" style="font-size:1rem;">
-                      ${tx.type === "out" ? "arrow_upward" : "arrow_downward"}
-                    </span>
-                    ${tx.type === "out" ? "Sent" : "Received"}
-                  </span>
-                </td>
-                <td style="font-size:0.82rem;">${tx.toAccountNumber ? "****" + tx.toAccountNumber.slice(-4) : "—"}</td>
-                <td class="${tx.type === "out" ? "amount-out" : "amount-in"}">
-                  ${tx.type === "out" ? "−" : "+"}EGP ${tx.amount.toLocaleString()}
-                </td>
-                <td>
-                  <span class="badge ${tx.status}">
-                    <span class="dot"></span>
-                    ${tx.status === "success" ? "Completed" : tx.status.charAt(0).toUpperCase() + tx.status.slice(1)}
-                  </span>
-                </td>
-                <td>
-                  <button class="btn-action" onclick="event.stopPropagation(); openModal(${tx.id})">
-                    <span class="material-icons-sharp">open_in_new</span>
-                  </button>
-                </td>
-              </tr>
-            `).join("");
+                    </td>
+                    <td style="font-size:0.82rem;">${tx.toAccountNumber ? "****" + tx.toAccountNumber.slice(-4) : "—"}</td>
+                    <td class="${tx.type === "out" ? "amount-out" : "amount-in"}">
+                      ${tx.type === "out" ? "−" : "+"}EGP ${tx.amount.toLocaleString()}
+                    </td>
+                    <td>
+                      <span class="badge ${tx.status}">
+                        <span class="dot"></span>
+                        ${tx.status === "success" ? "Completed" : tx.status.charAt(0).toUpperCase() + tx.status.slice(1)}
+                      </span>
+                    </td>
+                    <td>
+                      <button class="btn-action" onclick="event.stopPropagation(); openModal(${tx.id})">
+                        <span class="material-icons-sharp">open_in_new</span>
+                      </button>
+                    </td>
+                  </tr>
+                `).join("");
 
             const total = filtered.length;
             const from = total === 0 ? 0 : start + 1;
@@ -1289,28 +1305,28 @@
                 tx.status === "pending" ? "schedule" : "cancel";
 
             document.getElementById("modalContent").innerHTML = `
-              <div class="modal-status-icon" style="background:${iconColor}20; color:${iconColor};">
-                <span class="material-icons-sharp" style="font-size:2rem;">${iconName}</span>
-              </div>
-              <div style="text-align:center; margin-bottom:1.5rem;">
-                <h3 style="font-size:1.3rem; font-weight:700;">
-                  ${tx.type === "out" ? "−" : "+"}EGP ${tx.amount.toLocaleString()}
-                </h3>
-                <p style="margin-top:4px;">${tx.type === "out" ? "Sent to" : "Received from"} ${tx.toAccountNumber || "—"}</p>
-              </div>
-              <div>
-                <div class="modal-row"><span>Transaction ID</span><span style="font-family:monospace;">${tx.referenceNumber}</span></div>
-                <div class="modal-row"><span>Date &amp; Time</span><span>${tx.date}</span></div>
-                <div class="modal-row"><span>Type</span><span>${tx.type === "out" ? "Sent" : "Received"}</span></div>
-                <div class="modal-row"><span>Description</span><span>${tx.description || "—"}</span></div>
-                <div class="modal-row"><span>Status</span>
-                  <span class="badge ${tx.status}">
-                    <span class="dot"></span>
-                    ${tx.status === "success" ? "Completed" : tx.status.charAt(0).toUpperCase() + tx.status.slice(1)}
-                  </span>
-                </div>
-              </div>
-            `;
+                  <div class="modal-status-icon" style="background:${iconColor}20; color:${iconColor};">
+                    <span class="material-icons-sharp" style="font-size:2rem;">${iconName}</span>
+                  </div>
+                  <div style="text-align:center; margin-bottom:1.5rem;">
+                    <h3 style="font-size:1.3rem; font-weight:700;">
+                      ${tx.type === "out" ? "−" : "+"}EGP ${tx.amount.toLocaleString()}
+                    </h3>
+                    <p style="margin-top:4px;">${tx.type === "out" ? "Sent to" : "Received from"} ${tx.toAccountNumber || "—"}</p>
+                  </div>
+                  <div>
+                    <div class="modal-row"><span>Transaction ID</span><span style="font-family:monospace;">${tx.referenceNumber}</span></div>
+                    <div class="modal-row"><span>Date &amp; Time</span><span>${tx.date}</span></div>
+                    <div class="modal-row"><span>Type</span><span>${tx.type === "out" ? "Sent" : "Received"}</span></div>
+                    <div class="modal-row"><span>Description</span><span>${tx.description || "—"}</span></div>
+                    <div class="modal-row"><span>Status</span>
+                      <span class="badge ${tx.status}">
+                        <span class="dot"></span>
+                        ${tx.status === "success" ? "Completed" : tx.status.charAt(0).toUpperCase() + tx.status.slice(1)}
+                      </span>
+                    </div>
+                  </div>
+                `;
             document.getElementById("modalOverlay").classList.add("open");
         }
 
@@ -1339,16 +1355,7 @@
         }
 
         // ========== THEME & SIDEBAR ==========
-        function toggleTheme() {
-            document.body.classList.toggle("dark-theme");
-            const light = !document.body.classList.contains("dark-theme");
-            document.getElementById("lightIcon")?.classList.toggle("active", light);
-            document.getElementById("darkIcon")?.classList.toggle("active", !light);
-        }
-
-        function toggleSidebar() {
-            document.getElementById("sidebar").classList.toggle("open");
-        }
+        
 
         // ========== INIT ==========
         document.getElementById("searchInput").addEventListener("input", filterTable);
@@ -1366,5 +1373,6 @@
             document.getElementById("username").innerText = username;
         }
     </script>
+    <script src="js/theme.js"></script>
 </body>
 </html>

@@ -74,13 +74,21 @@ namespace WebApplication1.Services
                 .Select(t => new TransactionDto
                 {
                     Id = t.Id,
+                    AccountId = t.AccountId,
+                    ToAccountId = t.ToAccountId,
                     Amount = t.Amount,
                     Type = t.Type,
                     Status = t.Status,
                     Description = t.Description,
                     ReferenceNumber = t.ReferenceNumber,
                     CreatedAt = t.CreatedAt,
-                    ToAccountNumber = t.ToAccount != null ? t.ToAccount.AccountNumber : null
+
+                    IsOutgoing = t.AccountId == account.Id,
+
+                    OtherAccountNumber =
+        t.AccountId == account.Id
+            ? t.ToAccount.AccountNumber
+            : t.Account.AccountNumber
                 })
                 .ToListAsync();
         }
@@ -120,7 +128,7 @@ namespace WebApplication1.Services
             senderAccount.Balance -= request.Amount;
             receiverAccount.Balance += request.Amount;
 
-            var transaction = new Transaction
+            var sentTransaction = new Transaction
             {
                 AccountId = senderAccount.Id,
                 ToAccountId = receiverAccount.Id,
@@ -132,8 +140,13 @@ namespace WebApplication1.Services
                 CreatedAt = DateTime.UtcNow
             };
 
-            _context.Transactions.Add(transaction);
+            
+
+            _context.Transactions.Add(sentTransaction);
+
             await _context.SaveChangesAsync();
+
+            
 
             await _activityLogger.Log(userId, "Transfer", "Transaction", null, null, $"Transferred {request.Amount} to {request.ToAccountNumber}");
 

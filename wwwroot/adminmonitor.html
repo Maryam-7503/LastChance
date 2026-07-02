@@ -668,7 +668,7 @@ box-shadow: 0 0.8rem 0.8rem rgba(0,0,0,0.2);
               </div>
 
               <div class="profile-area">
-                  <div class="theme-btn" onclick="toggleTheme()">
+                  <div class="theme-btn">
                       <span class="material-icons-sharp active" id="lightIcon">light_mode</span>
                       <span class="material-icons-sharp" id="darkIcon">dark_mode</span>
                   </div>
@@ -989,18 +989,7 @@ box-shadow: 0 0.8rem 0.8rem rgba(0,0,0,0.2);
                   });
               }
 
-              const themeBtn = document.querySelector(".theme-btn");
-              if (themeBtn) {
-                  themeBtn.addEventListener("click", () => {
-                      document.body.classList.toggle("dark-theme");
-                      themeBtn
-                          .querySelector("span:first-child")
-                          .classList.toggle("active");
-                      themeBtn
-                          .querySelector("span:last-child")
-                          .classList.toggle("active");
-                  });
-              }
+              
 
               document.getElementById("logout-link").addEventListener("click", function (e) {
                   e.preventDefault();
@@ -1022,5 +1011,6 @@ box-shadow: 0 0.8rem 0.8rem rgba(0,0,0,0.2);
               document.getElementById("username").innerText = username;
           }
       </script>
+      <script src="js/theme.js"></script>
   </body>
 </html>

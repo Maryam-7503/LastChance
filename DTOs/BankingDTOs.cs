@@ -14,13 +14,22 @@
     public class TransactionDto
     {
         public int Id { get; set; }
+
+        public int AccountId { get; set; }
+        public int? ToAccountId { get; set; }
+
         public decimal Amount { get; set; }
+
         public string Type { get; set; } = string.Empty;
+
+        public bool IsOutgoing { get; set; }   // أضف ده
+
         public string Status { get; set; } = string.Empty;
         public string? Description { get; set; }
         public string? ReferenceNumber { get; set; }
         public DateTime CreatedAt { get; set; }
-        public string? ToAccountNumber { get; set; }
+
+        public string? OtherAccountNumber { get; set; } // بدل ToAccountNumber
     }
 
     // Transfer

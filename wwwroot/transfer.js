@@ -2,12 +2,7 @@ function toggleSidebar() {
     document.getElementById('sidebar').classList.toggle('open');
   }
 
-  function toggleTheme() {
-    document.body.classList.toggle('dark-theme');
-    const light = !document.body.classList.contains('dark-theme');
-    document.getElementById('lightIcon').classList.toggle('active', light);
-    document.getElementById('darkIcon').classList.toggle('active', !light);
-  }
+  
 
   function selectBeneficiary(acc) {
     document.getElementById('toAccount').value = acc;
