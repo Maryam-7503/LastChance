@@ -501,5 +501,11 @@ document.addEventListener("DOMContentLoaded", () => {
     loadDashboardData();
     loadBillsChart();
     loadMonthlyStatistics();
+    const dateEl = document.getElementById("currentDate");
+    if (dateEl) {
+        dateEl.textContent = new Date().toLocaleDateString("en-US", {
+            weekday: "long", year: "numeric", month: "long", day: "numeric"
+        });
+    }
 
 });

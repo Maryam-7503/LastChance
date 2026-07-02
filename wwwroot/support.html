@@ -309,9 +309,11 @@
         });
 
         if (response.ok) {
-          showSuccess();
-        } else {
-          alert("Failed to submit request. Please try again.");
+              showSuccess();
+          } else {
+          const error = await response.text();
+          console.log(error);
+          alert("Error: " + error);
         }
       } catch (error) {
         alert("Network error: " + error.message);
